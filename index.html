@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜報名</title>
+<meta name="description" content="練習愛自己——關於自我認同的24個練習。八堂線上直播課，每週一、三晚上八點。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: hero with the 8×3 practice grid; course story + eight sessions on the left, sticky form on the right (stacks on phones) */
+  :root {
+    --bg: #EDF1EF;
+    --paper: #FBFCFB;
+    --ink: #22303A;
+    --ink-soft: #5B6A72;
+    --teal: #2F6F73;
+    --teal-deep: #22555A;
+    --light: #D9A441;
+    --line: #D3DDDA;
+    --dot: #C5D3D0;
+    --on-teal: #FFFFFF;
+    --hand: "LXGW WenKai TC", "Kaiti TC", "DFKai-SB", "BiauKai", serif;
+    --sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #172126; --paper: #1F2B31; --ink: #E6EEEC; --ink-soft: #A7B6B9;
+      --teal: #6FB3B3; --teal-deep: #95CBC9; --light: #E2B866; --line: #33444B;
+      --dot: #34474E; --on-teal: #172126;
+      color-scheme: dark;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .gutter {
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding-block: 64px 48px; }
+  .hero-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: grid; gap: 36px; align-items: center;
+  }
+  @media (min-width: 900px) { .hero-inner { grid-template-columns: minmax(0, 1fr) 380px; gap: 56px; } }
+  .hero h1 {
+    margin: 0;
+    font-family: var(--hand);
+    font-weight: 700;
+    font-size: clamp(52px, 13vw, 92px);
+    line-height: 1.1;
+    letter-spacing: .06em;
+    color: var(--teal-deep);
+  }
+  .hero .sub {
+    margin: 14px 0 0;
+    font-family: var(--hand);
+    font-size: clamp(20px, 5vw, 26px);
+    letter-spacing: .08em;
+  }
+  .hero .meta {
+    margin: 22px 0 0;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 0; list-style: none;
+  }
+  .hero .meta li {
+    padding: 4px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    background: var(--paper);
+  }
+
+  /* 8 sessions × 3 practices */
+  .grid24 { width: 100%; max-width: 380px; margin: 0; }
+  .grid24 .cells {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+  }
+  .grid24 .cell {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--dot);
+  }
+  .grid24 .cell.lit { background: var(--teal); }
+  .grid24 .cell.tool { background: var(--light); }
+  .grid24 .axis {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px;
+    margin-top: 8px; text-align: center;
+    font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  }
+  .grid24 figcaption { margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: no-preference) {
+    .grid24 .cell { animation: lightup .5s ease-out both; animation-delay: calc(var(--i) * 45ms); }
+    @keyframes lightup { from { background: var(--dot); } }
+  }
+
+  /* ---------- Body ---------- */
+  .wrap {
+    max-width: 1120px; margin: 0 auto;
+    padding-block: 8px 64px;
+    display: grid; gap: 40px;
+  }
+  @media (min-width: 900px) {
+    .wrap { grid-template-columns: minmax(0, 1fr) 400px; gap: 56px; align-items: start; }
+    .form-panel { position: sticky; top: calc(24px + env(safe-area-inset-top, 0px)); }
+  }
+  .main { min-width: 0; display: grid; gap: 48px; }
+  section h2 {
+    margin: 0 0 16px;
+    font-family: var(--hand);
+    font-weight: 700;
+    font-size: 25px;
+    letter-spacing: .06em;
+    color: var(--teal-deep);
+    text-wrap: balance;
+  }
+  .story p { margin: 0 0 1em; font-size: 17px; line-height: 2; max-width: 34em; }
+  .story .lead { font-family: var(--hand); font-size: 22px; line-height: 1.7; color: var(--ink); }
+
+  ol.sessions {
+    margin: 0; padding: 0; list-style: none;
+    display: grid; gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  @media (min-width: 640px) {
+    ol.sessions { grid-template-columns: 1fr 1fr; column-gap: 32px; }
+  }
+  .sessions li {
+    display: grid;
+    grid-template-columns: 2.2em minmax(0, 1fr);
+    gap: 4px 12px;
+    align-items: baseline;
+    padding: 14px 2px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sessions .no { font-size: 14px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .sessions .t { font-family: var(--hand); font-size: 24px; font-weight: 700; color: var(--teal-deep); letter-spacing: .1em; }
+  .sessions .s { grid-column: 2; font-size: 15px; color: var(--ink-soft); line-height: 1.6; }
+
+  ul.plain { margin: 0; padding-left: 1.2em; }
+  ul.plain li { margin-bottom: .4em; }
+
+  dl.facts { margin: 0; border-top: 1px solid var(--line); }
+  .facts div {
+    display: grid; grid-template-columns: 6em minmax(0, 1fr); gap: 12px;
+    padding: 12px 2px; border-bottom: 1px solid var(--line);
+  }
+  .facts dt { color: var(--ink-soft); }
+  .facts dd { margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .facts .aside { display: block; font-weight: 400; font-size: 14px; color: var(--ink-soft); }
+  ol.notes { margin: 0; padding-left: 1.4em; }
+  ol.notes li { margin-bottom: .5em; }
+
+  /* ---------- Form ---------- */
+  .form-panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 22px 26px;
+  }
+  .form-panel h2 { margin-bottom: 2px; }
+  .form-hint { margin: 0 0 20px; font-size: 14px; color: var(--ink-soft); }
+  .field { margin-bottom: 18px; }
+  .field > label, .field > .legend { display: block; margin-bottom: 6px; font-size: 15px; font-weight: 500; }
+  .req { color: var(--teal); margin-left: 2px; }
+  .opt { color: var(--ink-soft); font-weight: 400; font-size: 13px; margin-left: 4px; }
+  input[type=text], input[type=tel], input[type=email], textarea, select {
+    width: 100%;
+    font: inherit; font-size: 16px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 13px;
+  }
+  textarea { min-height: 88px; resize: vertical; line-height: 1.7; }
+  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 22%, transparent); }
+  .field.invalid input, .field.invalid textarea { border-color: #B4505A; }
+  .err { display: none; margin-top: 4px; font-size: 13px; color: #B4505A; }
+  .field.invalid .err { display: block; }
+
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  .choice { position: relative; }
+  .choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .choice span {
+    display: inline-block; padding: 7px 16px;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: var(--bg); cursor: pointer; font-size: 15px;
+  }
+  .choice input:checked + span { background: var(--teal); border-color: var(--teal); color: var(--on-teal); }
+  .choice input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 35%, transparent); }
+
+  .agree { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.7; cursor: pointer; }
+  .agree input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--teal); flex: none; }
+
+  button.submit {
+    width: 100%; margin-top: 6px; padding: 14px;
+    font: inherit; font-size: 17px; font-weight: 700; letter-spacing: .15em;
+    color: var(--on-teal); background: var(--teal);
+    border: 0; border-radius: 12px; cursor: pointer;
+  }
+  button.submit:hover { background: var(--teal-deep); }
+  button.submit:focus-visible { outline: 3px solid var(--light); outline-offset: 2px; }
+  button.submit:disabled { opacity: .55; cursor: default; }
+
+  .msg { display: none; margin-top: 16px; padding: 12px 14px; border-radius: 10px; font-size: 15px; background: color-mix(in srgb, #B4505A 12%, var(--paper)); color: var(--ink); }
+  .msg.show { display: block; }
+
+  .done { display: none; text-align: center; padding: 20px 4px 8px; }
+  .done.show { display: block; }
+  .done .mark {
+    width: 60px; height: 60px; margin: 0 auto 16px; border-radius: 50%;
+    background: var(--light);
+  }
+  .done h3 { margin: 0 0 8px; font-family: var(--hand); font-size: 24px; color: var(--teal-deep); }
+  .done p { margin: 0; color: var(--ink-soft); }
+
+  footer { text-align: center; padding-block: 0 40px; font-size: 13px; color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<header class="hero gutter">
+  <div class="hero-inner">
+    <div>
+      <h1>練習愛自己</h1>
+      <p class="sub">關於自我認同的 24 個練習</p>
+      <ul class="meta">
+        <li>線上直播</li>
+        <li>八堂課</li>
+        <li>每週一、三 晚上 8:00</li>
+      </ul>
+    </div>
+    <figure class="grid24" aria-label="八堂課，每堂三個練習，共二十四個">
+      <div class="cells" id="cells"></div>
+      <div class="axis" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+      <figcaption>八堂，每堂三個練習，其中一個是可以帶回日常的隨身工具。</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap gutter">
+  <div class="main">
+    <section class="story">
+      <h2>關於這堂課</h2>
+      <p class="lead">「我不夠好。」這句話，你熟悉嗎？</p>
+      <p>這是一套以練習為主的線上課。不談太多理論，從身體和當下的感受出發，一堂一堂地辨認那些我們以為是「我」、其實不是我的東西，把價值從外面慢慢收回來。</p>
+      <p>每堂三個練習，其中一個會成為你的隨身工具，下課後回到生活裡，也用得上。練習很簡單，深淺由你。</p>
+    </section>
+
+    <section>
+      <h2>八堂課</h2>
+      <ol class="sessions">
+        <li><span class="no">01</span><span class="t">匱乏</span><span class="s">關於「我不夠好」的一場對話</span></li>
+        <li><span class="no">02</span><span class="t">羞愧</span><span class="s">渴望被誰認同？</span></li>
+        <li><span class="no">03</span><span class="t">和解</span><span class="s">給鏡子一個微笑</span></li>
+        <li><span class="no">04</span><span class="t">外求</span><span class="s">愛與被愛的掙扎</span></li>
+        <li><span class="no">05</span><span class="t">界線</span><span class="s">「我」的邊界在哪裡</span></li>
+        <li><span class="no">06</span><span class="t">照見</span><span class="s">「內在觀察者」觀察了什麼？</span></li>
+        <li><span class="no">07</span><span class="t">具足</span><span class="s">我是完美無缺的我</span></li>
+        <li><span class="no">08</span><span class="t">迴向</span><span class="s">真正的自我價值</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>先說清楚</h2>
+      <ul class="plain">
+        <li>這不是心理治療。我們不追溯過去，也不挖掘創傷，只看此刻。</li>
+        <li>分享時，只分享過程，不需要說出內容。</li>
+        <li>不需要任何基礎。這也是全面靈性扎根（HSG）的入門短版。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>課程資訊</h2>
+      <dl class="facts">
+        <div><dt>上課形式</dt><dd>線上直播<span class="aside">【直播平台】</span></dd></div>
+        <div><dt>上課時間</dt><dd>每週一、三 晚上 8:00 – 10:00</dd></div>
+        <div><dt>開課日期</dt><dd>【開課日期】起，共八堂</dd></div>
+        <div><dt>課程費用</dt><dd>【課程費用】</dd></div>
+        <div><dt>名額</dt><dd>【名額】</dd></div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>報名須知</h2>
+      <ol class="notes">
+        <li>請先填寫報名表，我們會再通知你繳費方式，完成繳費後報名才算確認。</li>
+        <li>上課前會寄出直播連結。請準備可以視訊的電腦或手機，以及一個不被打擾的空間。</li>
+      </ol>
+    </section>
+  </div>
+
+  <aside class="form-panel" id="signup">
+    <h2>報名表單</h2>
+    <p class="form-hint">標示 <span class="req">*</span> 為必填</p>
+
+    <form id="regForm" novalidate>
+      <div class="field" data-field="name">
+        <label for="name">姓名<span class="req">*</span></label>
+        <input type="text" id="name" autocomplete="name" required>
+        <div class="err">請填寫姓名</div>
+      </div>
+
+      <div class="field" data-field="phone">
+        <label for="phone">手機<span class="req">*</span></label>
+        <input type="tel" id="phone" autocomplete="tel" inputmode="tel" placeholder="0912345678" required>
+        <div class="err">請填寫有效的手機號碼</div>
+      </div>
+
+      <div class="field" data-field="email">
+        <label for="email">Email<span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email" required>
+        <div class="err">請填寫有效的 Email，直播連結會寄到這裡</div>
+      </div>
+
+      <div class="field">
+        <label for="line">LINE ID<span class="opt">選填</span></label>
+        <input type="text" id="line">
+      </div>
+
+      <div class="field" data-field="hsg">
+        <span class="legend" id="hsgLabel">是否上過 HSG 或相關課程<span class="req">*</span></span>
+        <div class="choices" role="radiogroup" aria-labelledby="hsgLabel">
+          <label class="choice"><input type="radio" name="hsg" value="是"><span>是</span></label>
+          <label class="choice"><input type="radio" name="hsg" value="否"><span>否</span></label>
+        </div>
+        <div class="err">請選擇一項</div>
+      </div>
+
+      <div class="field">
+        <span class="legend" id="srcLabel">從哪裡知道這堂課<span class="opt">選填</span></span>
+        <div class="choices" role="radiogroup" aria-labelledby="srcLabel">
+          <label class="choice"><input type="radio" name="source" value="Facebook"><span>Facebook</span></label>
+          <label class="choice"><input type="radio" name="source" value="Podcast"><span>Podcast</span></label>
+          <label class="choice"><input type="radio" name="source" value="朋友介紹"><span>朋友介紹</span></label>
+          <label class="choice"><input type="radio" name="source" value="其他"><span>其他</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="intention">想帶著什麼來上課<span class="opt">選填</span></label>
+        <textarea id="intention" placeholder="一句話就好"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="note">其他備註<span class="opt">選填</span></label>
+        <textarea id="note" style="min-height:60px"></textarea>
+      </div>
+
+      <div class="field" data-field="agree">
+        <label class="agree">
+          <input type="checkbox" id="agree">
+          我已閱讀報名須知，了解這是線上直播課程，完成繳費後報名才算確認。
+        </label>
+        <div class="err">請勾選以確認已閱讀報名須知</div>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">送出報名</button>
+      <div class="msg" id="errorMsg" role="alert"></div>
+    </form>
+
+    <div class="done" id="doneBox" role="status" aria-live="polite">
+      <div class="mark" aria-hidden="true"></div>
+      <h3>報名已送出</h3>
+      <p>我們會再寄信通知你繳費方式。<br>期待在課堂上見到你。</p>
+    </div>
+  </aside>
+</main>
+
+<footer class="gutter">練習愛自己——關於自我認同的 24 個練習</footer>
+
+<script>
+  // 部署 Apps Script 後，把網址貼在這裡
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXdb3kKqoZulq9CQITg0y90v7aeIwEbweFyHyySLJo_GyYVr_hZ-rKkFSZDxBiZKg3/exec";
+
+  // 8×3 練習格：每欄是一堂課，最上面一格是隨身工具
+  (function () {
+    const cells = document.getElementById("cells");
+    let i = 0;
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 8; col++) {
+        const d = document.createElement("span");
+        d.className = "cell " + (row === 0 ? "tool" : "lit");
+        d.style.setProperty("--i", col * 3 + row);
+        cells.appendChild(d);
+        i++;
+      }
+    }
+  })();
+
+  const form = document.getElementById("regForm");
+  const btn = document.getElementById("submitBtn");
+  const errorMsg = document.getElementById("errorMsg");
+  const doneBox = document.getElementById("doneBox");
+  const val = (id) => document.getElementById(id).value.trim();
+  const picked = (name) => { const r = form.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ""; };
+
+  function setInvalid(name, bad) {
+    const el = form.querySelector('[data-field="' + name + '"]');
+    if (el) el.classList.toggle("invalid", bad);
+    return !bad;
+  }
+  function validate() {
+    let ok = true;
+    ok = setInvalid("name", !val("name")) && ok;
+    ok = setInvalid("phone", !/^[0-9+\-\s()]{8,}$/.test(val("phone"))) && ok;
+    ok = setInvalid("email", !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("email"))) && ok;
+    ok = setInvalid("hsg", !picked("hsg")) && ok;
+    ok = setInvalid("agree", !document.getElementById("agree").checked) && ok;
+    return ok;
+  }
+  form.addEventListener("input", (e) => {
+    const f = e.target.closest("[data-field]");
+    if (f && f.classList.contains("invalid")) validate();
+  });
+  form.addEventListener("change", (e) => {
+    const f = e.target.closest("[data-field]");
+    if (f && f.classList.contains("invalid")) validate();
+  });
+
+  function showError(text) { errorMsg.textContent = text; errorMsg.classList.add("show"); }
+  function closeForm(text) { btn.disabled = true; btn.textContent = text; }
+
+  if (SCRIPT_URL) {
+    fetch(SCRIPT_URL + "?action=status")
+      .then((r) => r.json())
+      .then((d) => { if (d && d.full) { closeForm("名額已滿"); showError("本期名額已滿，感謝你的關注。"); } })
+      .catch(() => {});
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorMsg.classList.remove("show");
+    if (!validate()) {
+      const first = form.querySelector(".invalid input, .invalid textarea");
+      if (first) first.focus();
+      return;
+    }
+    if (!SCRIPT_URL) { showError("報名系統尚未連結，請稍後再試。"); return; }
+
+    const data = {
+      name: val("name"), phone: val("phone"), email: val("email"), line: val("line"),
+      hsg: picked("hsg"), source: picked("source"),
+      intention: val("intention"), note: val("note")
+    };
+
+    btn.disabled = true;
+    btn.textContent = "送出中…";
+    try {
+      // 不設定 Content-Type，避免觸發 CORS 預檢
+      const res = await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(data) });
+      const out = await res.json();
+      if (out.status === "ok") {
+        form.style.display = "none";
+        doneBox.classList.add("show");
+        doneBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else if (out.status === "full") {
+        closeForm("名額已滿");
+        showError("本期名額已滿，感謝你的關注。");
+      } else if (out.status === "duplicate") {
+        btn.disabled = false; btn.textContent = "送出報名";
+        showError("這支手機號碼已經報名過了，不需要重複報名。如需修改資料，請直接與我們聯繫。");
+      } else {
+        throw new Error(out.message || "unknown");
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "送出報名";
+      showError("送出失敗，請確認網路連線後再試一次。");
+    }
+  });
+</script>
+</body>
+</html>
