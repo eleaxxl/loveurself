@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜課程空間</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF;--paper:#FBFCFB;--ink:#22303A;--ink-soft:#5B6A72;
+  --teal:#2F6F73;--teal-deep:#22555A;--light:#D9A441;--line:#D3DDDA;--dot:#C5D3D0;--on-teal:#FFFFFF;
+  --hand:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  box-sizing:border-box;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#172126;--paper:#1F2B31;--ink:#E6EEEC;--ink-soft:#A7B6B9;
+  --teal:#6FB3B3;--teal-deep:#95CBC9;--light:#E2B866;--line:#33444B;--dot:#34474E;--on-teal:#172126;
+  color-scheme:dark;
+}}
+*{box-sizing:inherit}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100%}
+.wrap{max-width:640px;margin:0 auto;padding:0 24px 140px}
+header.top{text-align:center;padding:76px 0 20px}
+header.top .kicker{font-family:var(--sans);font-size:13px;letter-spacing:7px;color:var(--teal);margin-bottom:20px;text-indent:7px}
+header.top h1{font-size:40px;font-weight:700;letter-spacing:6px;margin:0 0 14px;color:var(--teal-deep)}
+header.top .sub{font-size:16px;color:var(--ink-soft);letter-spacing:2px;font-family:var(--sans)}
+hr.rule{border:none;border-top:1px solid var(--line);max-width:110px;margin:34px auto}
+.core{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;margin:26px 0 8px}
+.core .lbl{font-family:var(--sans);font-size:12px;letter-spacing:4px;color:var(--teal);margin-bottom:14px;text-indent:4px}
+.core .line{font-size:23px;font-weight:700;letter-spacing:2px;line-height:1.7;color:var(--teal-deep)}
+.sec{font-family:var(--sans);font-size:13px;letter-spacing:.42em;color:var(--teal);text-indent:.42em;display:flex;align-items:center;gap:16px;margin:50px 2px 18px}
+.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+.recall{font-size:17px;color:var(--ink-soft);line-height:2;letter-spacing:.5px}
+.recall p{margin:0 0 14px}
+.recall strong{color:var(--ink);font-weight:700}
+.q{margin:0 0 30px}
+.q .ask{font-size:18px;letter-spacing:.5px;margin-bottom:4px;line-height:1.8}
+.q .hint{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.85;letter-spacing:.5px;margin-bottom:12px;line-height:1.7}
+textarea,input.name{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:14px;font-family:var(--hand);font-size:16px;color:var(--ink);line-height:1.9;letter-spacing:.5px;padding:16px 18px;resize:vertical;outline:none;transition:border-color .2s,background .2s}
+textarea{min-height:96px}
+textarea:focus,input.name:focus{border-color:var(--teal);background:var(--bg)}
+textarea::placeholder,input.name::placeholder{color:var(--dot)}
+.practice{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--light);border-radius:14px;padding:26px 28px;margin-top:10px}
+.practice .n{font-family:var(--sans);font-size:12px;letter-spacing:4px;color:var(--light);margin-bottom:10px;text-indent:4px;filter:brightness(.82)}
+.practice .t{font-size:20px;font-weight:700;letter-spacing:1.5px;margin-bottom:10px;color:var(--teal-deep)}
+.practice .d{font-size:15px;color:var(--ink-soft);line-height:1.9;letter-spacing:.5px;margin-bottom:6px;font-family:var(--sans)}
+.actions{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg) 74%,rgba(237,241,239,0));padding:22px 0 26px;margin-top:40px;text-align:center}
+.actions .namewrap{max-width:320px;margin:0 auto 16px;text-align:left}
+.actions .namewrap label{font-family:var(--sans);font-size:12px;letter-spacing:2px;color:var(--ink-soft);display:block;margin-bottom:6px;text-indent:2px}
+.btnrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+button.b{font-family:var(--sans);font-size:15px;letter-spacing:.2em;border-radius:999px;padding:13px 30px;cursor:pointer;text-indent:.2em;transition:opacity .2s,background .2s;border:1px solid var(--teal)}
+button.dl{color:var(--teal);background:transparent}
+button.dl:hover{background:var(--paper)}
+button.send{color:var(--on-teal);background:var(--teal);border-color:var(--teal)}
+button.send:hover{opacity:.88}
+button.send:disabled{opacity:.5;cursor:default}
+.msg{font-family:var(--sans);font-size:13px;letter-spacing:.5px;margin-top:14px;min-height:1.3em;line-height:1.7}
+.msg.ok{color:var(--teal)}
+.msg.err{color:#b4524a}
+.savehint{font-family:var(--sans);font-size:12px;color:var(--ink-soft);opacity:.8;letter-spacing:.5px;margin-top:10px;line-height:1.7}
+footer{text-align:center;padding-top:50px;color:var(--ink-soft);opacity:.7;font-family:var(--sans);font-size:13px;letter-spacing:3px;text-indent:3px}
+/* 選單卡片 */
+.menu{display:flex;flex-direction:column;gap:18px;margin-top:20px}
+a.card,div.card{display:block;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:28px 30px;transition:border-color .2s,background .2s,transform .1s}
+a.card:hover{border-color:var(--teal);background:var(--bg)}
+a.card:active{transform:scale(.995)}
+.card .n{font-family:var(--sans);font-size:13px;letter-spacing:4px;color:var(--teal);margin-bottom:12px}
+.card .t{font-size:26px;font-weight:700;letter-spacing:3px;margin-bottom:8px;color:var(--teal-deep)}
+.card .d{font-size:15px;color:var(--ink-soft);letter-spacing:.5px;line-height:1.8;font-family:var(--sans)}
+.card .go{margin-top:16px;font-family:var(--sans);font-size:13px;letter-spacing:3px;color:var(--teal)}
+div.card.soon{opacity:.6;cursor:default}
+div.card.soon .n,div.card.soon .go{color:var(--ink-soft)}
+/* Gate */
+#gate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--sans);padding:24px}
+#gate .gk{font-size:14px;letter-spacing:.5em;color:var(--teal);margin-bottom:26px;text-indent:.5em}
+#gate input{font-family:var(--hand);font-size:20px;text-align:center;letter-spacing:.3em;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 20px;width:min(260px,80vw);outline:none}
+#gate button{margin-top:18px;font-family:var(--sans);font-size:16px;letter-spacing:.3em;color:var(--on-teal);background:var(--teal);border:none;border-radius:999px;padding:12px 44px;cursor:pointer;text-indent:.3em}
+#gate .gm{margin-top:16px;font-size:13px;letter-spacing:.1em;color:#b4524a;min-height:1.2em}
+@media(max-width:560px){.wrap{padding:0 20px 130px}header.top{padding:54px 0 16px}header.top h1{font-size:32px;letter-spacing:4px}.core{padding:26px 22px}.core .line{font-size:20px}.card .t{font-size:23px}}
+@media print{body{background:#fff}.actions,#gate{display:none}.core,.practice,textarea{background:#fff}textarea{border:none;border-bottom:1px solid #ccc;border-radius:0;min-height:120px;background-image:repeating-linear-gradient(transparent,transparent 37px,#ddd 38px);background-attachment:local}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gk">練 習 愛 自 己</div>
+  <input id="gpw" type="password" inputmode="text" placeholder="請輸入密碼" autocomplete="off">
+  <button id="gbtn">進　入</button>
+  <div class="gm" id="gm"></div>
+</div>
+<div id="app"></div>
+<script>
+var ENC = {"salt": "zLHZQICu0z5fEUOiW1cgRA==", "iv": "jGkN92CUt1ezd/+n", "ct": "8PS64/wDxQS3D1T0U8zuzPujilm6twqUqKF3CzFkmCZgA5vL3KKMFkP/FjQYSNL/mecv0Bpbz4p0PIiYCc7umrNLM/ReX90DuHviKLSK7S34U1m6nsJF1jvzNmT08sYYoPz/ugIZjBfV2O0FnfGw3i0AH+LMWjpeFMzlNYuLCw3cFFmr3wOfeQaUXxDiMJ4QgqJyxk3z7Jbzg6x5sLCVsB5vJ/jfDGjon16bUP15Thkz7vnKqaMWW3VH1kioljO1888My1utjEcFTBDI/ckl7A6JE3AaFVr/d7T4lbeQNt0A8ZTSBBYaQimtLanBgHICu2Mx/Kvi3j3RHbIXAj7rQ5P2RnRErs6s8SCYPp3jh+d2lCT/KEVvsv51eeRz1zGVNdwr9bRFKzEsh3cFkPJfLIQ2ZyRvefVXwHhfNxMRueop0gS7WC6RRflA/nof6mmvAbavqdHuJH7+TxRcojHbEcZdaP3l4bFcodVG6yBSqznAyaxgX33CuSv+JlDf1mANyzOPr6wyOZoeupZhSZEQyRxK8AaNrAiNGt3c9wTI30qTUFI5nCqQ9MVh4nhsGX8G2dlFWMj+v6Twick0tF4C6W4q22e3WnaQ7IHeqaCw5ObQ4QDGqzN5CAHXIz9Ffm77ItY5DSf0Ns3BrXhNgR9hlfY1k+6E1fvAC10KBwhyOnA9oZk1vw7hYfrQ1MvwI81vJ3G0AMSkQNkhGXSOQ9NQ0eMSl612XLiLif91sX2T+2hk+niwGzSbSxFpHbD0vuS03CDr8AgcIthu+DD4NtyvbvkLyYyEDixt9NySJl8w6iAGpNaGTcwhqKfr2v2QxGHXjDGL1wgY8GEfrC0DG9gXmVOT5duRs4gK8vbxJs0dr4FvZMTaXTWZsSFS26LbNl+DZKDiLaiZHBRa4Gp4vchr5kpn++V1DQ6CKMu7wXCT+HXNXozrLr5fPXl2ie9Jb2H+oa4fwJ+EodBPWUrv2tNhjib87CgWLWvNrI0vBragpzYTS1+HbF2ijFOdiiXcyg4kWRt5b2twY7GiiNZeKtC3cV0ns/0BoDNqOoHRfhrOl9U9aJCRV4jg9aAjDoCUBYUXUZaNN0KBckbe34RAqUhH/E/w256JPcB/9+TYMG87SkT5NAC7Be7TZ50TTGYvsJiJTJYSINSZtcOHBhN+MNaCq509V4OxHuDkV5itOODVRjbeb4u6zZSKQWOlUAJ9oLJwhSBZjeVplA8072qw+6oEE1s1jbOp/Y6uVzNfck2kuAmx6ChrsO1zz8XsUSSWIrScXGAQdAXvHBSACHva2UNKosmGZ48mb3r+Pht5UCPEZoLCYn/AUXpm6XGRdKM4hUYEPI4kaVLQLi/5ZDnsGZuUKwR09rtcbdiWyXYOK6OVBS7upf6MVZeH49quh61hdn9Es2sHyyzDyc3aOeVHyUd0DAGwQwrvXnwXSFl3XAsQraKq5WtjNjFmWeVJ596wxfKVQceHRkI038A5bTmf4MzrgKgimvYxpvv5JrrzQl5haLhZ0prm9AB11EgTxD3IT9IInkWDxhNs4sCNwHCjhezYxrogU+liymGvYsYfAF8vpG9Z5VgQZdGTJ/5tNeeaQXuN/oCMw6+//JyM7gcGwCXnMqzHNZ+CPfyIwLXDo/yybtcMh446NFPLlHhJdWAxSABTnL4uakOwo2afsHa9z9M4fuOAM1Jv/xurr8/0K2EDViYW80ZWNZyJR50epbnAKgMUyX74HiKe/BYcZXwi"};
+function b64(s){var bin=atob(s);var a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
+async function decryptWith(pw){
+  var enc=new TextEncoder();
+  var keyMat=await crypto.subtle.importKey('raw',enc.encode(pw),{name:'PBKDF2'},false,['deriveKey']);
+  var key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(ENC.salt),iterations:150000,hash:'SHA-256'},keyMat,{name:'AES-GCM',length:256},false,['decrypt']);
+  var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(ENC.iv)},key,b64(ENC.ct));
+  return new TextDecoder().decode(pt);
+}
+function runHandbook(){ 
+(function(){
+  var KEY='aixue_lesson1_kuifa', LESSON='第一堂 匱乏';
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAmYC-E6ShBuEp4q0KA-5me3intGUYJ9mjCEJHhzJXsq/exec';
+  var areas=[].slice.call(document.querySelectorAll('textarea'));
+  if(!areas.length) return;
+  var nameInput=document.getElementById('nameInput'), msg=document.getElementById('msg');
+  try{var s=JSON.parse(localStorage.getItem(KEY)||'{}');areas.forEach(function(t){var k=t.getAttribute('data-q');if(s[k]!=null)t.value=s[k];});if(nameInput&&s.__name)nameInput.value=s.__name;}catch(e){}
+  function persist(){var d={};areas.forEach(function(t){d[t.getAttribute('data-q')]=t.value;});if(nameInput)d.__name=nameInput.value;try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){}}
+  areas.forEach(function(t){t.addEventListener('input',persist);});if(nameInput)nameInput.addEventListener('input',persist);
+  function collect(){return areas.map(function(t){return{q:t.getAttribute('data-q'),a:t.value.trim()};});}
+  function pad(n){return String(n).padStart(2,'0');}
+  function txt(sel){var el=document.querySelector(sel);return el?el.textContent.trim().replace(/\s+/g,' '):'';}
+  function buildMD(){var d=new Date();var st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    var h1=txt('header.top h1'), sub=txt('header.top .sub'), core=txt('.core .line');
+    var L=[];L.push('# 練習愛自己 · '+h1+' — 我的手冊');L.push('');if(sub)L.push('> '+sub);if(core)L.push('> 核心句：'+core);L.push('> 填寫日期：'+st);L.push('');
+    collect().forEach(function(it){L.push('## '+it.q);L.push('');L.push(it.a||'（還沒寫）');L.push('');});return L.join('\n');}
+  var dl=document.getElementById('dlBtn');
+  if(dl)dl.addEventListener('click',function(){var b=new Blob([buildMD()],{type:'text/markdown;charset=utf-8'});var u=URL.createObjectURL(b);var d=new Date();var st=d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());var a=document.createElement('a');a.href=u;a.download='練習愛自己_'+txt('header.top h1')+'_我的手冊_'+st+'.md';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u);},1500);});
+  var sb=document.getElementById('sendBtn');
+  if(sb)sb.addEventListener('click',function(){var nm=nameInput?nameInput.value.trim():'';if(!nm){msg.className='msg err';msg.textContent='送出前，請先填上你的名字。';if(nameInput)nameInput.focus();return;}msg.className='msg';msg.textContent='送出中……';sb.disabled=true;fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({name:nm,lesson:LESSON,answers:collect()})}).then(function(r){return r.json();}).then(function(res){if(res&&res.ok){msg.className='msg ok';msg.textContent='已送出，謝謝你。引導人收到了。';}else{throw new Error((res&&res.error)||'err');}}).catch(function(){msg.className='msg err';msg.textContent='送出沒成功，請稍後再試一次（或先下載保存）。';sb.disabled=false;});});
+})();
+ }
+async function tryOpen(){
+  var pw=document.getElementById('gpw').value;
+  var gm=document.getElementById('gm');
+  gm.textContent='';
+  try{
+    var html=await decryptWith(pw);
+    document.getElementById('app').innerHTML=html;
+    document.getElementById('gate').style.display='none';
+    try{ localStorage.setItem('aixue_pw', pw); }catch(e){}
+    runHandbook();
+  }catch(err){
+    gm.textContent='密碼不對，再試一次。';
+    document.getElementById('gpw').value='';
+    document.getElementById('gpw').focus();
+  }
+}
+document.getElementById('gbtn').addEventListener('click',tryOpen);
+document.getElementById('gpw').addEventListener('keydown',function(e){if(e.key==='Enter')tryOpen();});
+// 若本機記得密碼，嘗試自動解鎖
+(async function(){try{var p=localStorage.getItem('aixue_pw');if(p){document.getElementById('gpw').value=p;await tryOpen();}}catch(e){}})();
+document.getElementById('gpw').focus();
+</script>
+</body>
+</html>
