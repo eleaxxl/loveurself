@@ -243,10 +243,12 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s6">
     <div class="keep">
       <div class="kk">帶 走 一 句</div>
-      <div class="ans" id="keepAns"></div>
-      <div class="close">好人、壞人，<br>也許都還不是現在要回答的。<br>先把這個問號，帶在身上。</div>
+      <div class="ans">人沒有好／壞。<br>「好／壞」只是看法，<br>不是我這個人。</div>
     </div>
-    <div class="center mt"><button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button></div>
+    <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
+      <button class="b go" id="againBtn">再玩一次</button>
+    </div>
     <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
   </section>
 
@@ -464,11 +466,12 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
       .then(function(r){return r.json();})
       .then(function(res){
         if(!res||!res.ok) throw new Error();
-        $('#keepAns').textContent = data.verdict ? ('「'+data.verdict+'」') : '（你留白了——也好。）';
         show('s6');
       })
       .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
   });
+
+  $('#againBtn').addEventListener('click',function(){ location.reload(); });
 
   // --- 下載 ---
   $('#dlBtn').addEventListener('click',function(){
