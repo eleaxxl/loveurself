@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜我是好人，還是壞人？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF;--paper:#FBFCFB;--ink:#22303A;--ink-soft:#5B6A72;
+  --teal:#2F6F73;--teal-deep:#22555A;--light:#D9A441;--line:#D3DDDA;--dot:#C5D3D0;--on-teal:#FFFFFF;
+  --flaw:#C98A6B;--flaw-ink:#5a3726;--merit:#2F6F73;--merit-ink:#fff;
+  --hand:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  box-sizing:border-box;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#172126;--paper:#1F2B31;--ink:#E6EEEC;--ink-soft:#A7B6B9;
+  --teal:#6FB3B3;--teal-deep:#95CBC9;--light:#E2B866;--line:#33444B;--dot:#34474E;--on-teal:#172126;
+  --flaw:#C98A6B;--flaw-ink:#2a1a12;--merit:#6FB3B3;--merit-ink:#13201f;
+  color-scheme:dark;
+}}
+*{box-sizing:inherit}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100%}
+.wrap{max-width:600px;margin:0 auto;padding:0 24px 80px}
+
+/* 階段切換 */
+.stage{display:none;animation:fade .6s ease}
+.stage.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+header.top{text-align:center;padding:64px 0 10px}
+header.top .kicker{font-family:var(--sans);font-size:13px;letter-spacing:7px;color:var(--teal);margin-bottom:18px;text-indent:7px}
+header.top h1{font-size:32px;font-weight:700;letter-spacing:4px;margin:0 0 12px;color:var(--teal-deep);line-height:1.5}
+header.top .sub{font-size:15px;color:var(--ink-soft);letter-spacing:1.5px;font-family:var(--sans)}
+hr.rule{border:none;border-top:1px solid var(--line);max-width:96px;margin:28px auto}
+
+.lead{font-size:16px;color:var(--ink-soft);line-height:2;letter-spacing:.5px;margin:20px 0}
+.lead.center{text-align:center}
+
+button.b{font-family:var(--sans);font-size:15px;letter-spacing:.2em;border-radius:999px;padding:13px 32px;cursor:pointer;text-indent:.2em;transition:opacity .2s,background .2s;border:1px solid var(--teal)}
+button.go{color:var(--on-teal);background:var(--teal)}
+button.go:hover{opacity:.88}
+button.go:disabled{opacity:.45;cursor:default}
+button.ghost{color:var(--teal);background:transparent}
+button.ghost:hover{background:var(--paper)}
+.center{text-align:center}
+.mt{margin-top:28px}
+
+/* 靜心 */
+.med{text-align:center;padding:40px 0}
+.med .opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:26px 0}
+.med .opt{font-family:var(--sans);font-size:15px;letter-spacing:1px;color:var(--teal);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:11px 22px;cursor:pointer;transition:all .18s}
+.med .opt:hover{border-color:var(--teal)}
+.med .opt.sel{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.med .custom{margin-top:6px}
+.med .custom input{width:120px;text-align:center;font-family:var(--hand);font-size:15px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink);outline:none}
+.med .sitting{font-size:17px;color:var(--ink-soft);letter-spacing:2px;margin:30px 0;line-height:2.2;min-height:3em}
+.breath{width:12px;height:12px;border-radius:50%;background:var(--teal);margin:24px auto;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(2.4);opacity:1}}
+
+/* 填句子 */
+.fld{margin-bottom:16px}
+.ask{font-size:17px;letter-spacing:.5px;margin-bottom:8px;line-height:1.7}
+.hint{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.85;letter-spacing:.4px;margin-bottom:10px;line-height:1.7}
+input.line,textarea{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-family:var(--hand);font-size:16px;color:var(--ink);line-height:1.8;letter-spacing:.5px;padding:13px 16px;outline:none;transition:border-color .2s,background .2s}
+textarea{resize:vertical;min-height:70px}
+input.line:focus,textarea:focus{border-color:var(--teal);background:var(--bg)}
+input.line::placeholder,textarea::placeholder{color:var(--dot)}
+.recall{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:16px}
+.recall .rh{font-family:var(--sans);font-size:12px;letter-spacing:2px;color:var(--teal);margin-bottom:10px}
+.recall .chip{display:inline-block;font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;margin:0 6px 8px 0;cursor:pointer;letter-spacing:.4px;transition:all .15s}
+.recall .chip:hover{border-color:var(--teal);color:var(--teal)}
+.slots{margin-top:6px}
+.slot{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.slot .idx{font-family:var(--sans);font-size:13px;color:var(--teal);width:20px;text-align:center;flex:0 0 auto}
+.slot input{flex:1}
+
+/* 貼標籤舞台 */
+.tagstage{text-align:center}
+.human-wrap{position:relative;width:260px;max-width:78vw;margin:14px auto 6px;aspect-ratio:1/1.9}
+.human-wrap svg{position:absolute;inset:0;width:100%;height:100%}
+.tag{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));font-family:var(--sans);font-size:12px;letter-spacing:.3px;padding:4px 9px;border-radius:7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.14);opacity:0;animation:stick .45s cubic-bezier(.34,1.56,.64,1) forwards;pointer-events:none;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.tag.flaw{background:var(--flaw);color:var(--flaw-ink)}
+.tag.merit{background:var(--merit);color:var(--merit-ink)}
+@keyframes stick{0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1.6)}100%{opacity:1;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1)}}
+.counter{font-family:var(--sans);font-size:13px;color:var(--ink-soft);letter-spacing:.5px;margin:4px 0 14px}
+.counter b{color:var(--teal)}
+.addbar{display:flex;gap:10px;max-width:420px;margin:0 auto}
+.addbar input{flex:1}
+.addbar button{flex:0 0 auto}
+
+/* 大哉問 */
+.bigq{text-align:center;padding:30px 0}
+.bigq .q{font-size:26px;font-weight:700;letter-spacing:2px;color:var(--teal-deep);line-height:1.7;margin:20px 0 26px}
+.bigq textarea{max-width:460px;margin:0 auto;text-align:left;min-height:80px}
+
+/* 留念卡 */
+.keep{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:34px 30px;text-align:center;margin:20px 0}
+.keep .kk{font-family:var(--sans);font-size:12px;letter-spacing:4px;color:var(--teal);margin-bottom:18px;text-indent:4px}
+.keep .ans{font-size:18px;color:var(--ink);line-height:1.9;letter-spacing:.5px;margin-bottom:20px}
+.keep .close{font-size:16px;color:var(--ink-soft);line-height:2;letter-spacing:.5px}
+
+footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-family:var(--sans);font-size:12px;letter-spacing:3px;text-indent:3px}
+
+@media(max-width:560px){.wrap{padding:0 20px 70px}header.top{padding:48px 0 8px}header.top h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 0 · 開場（極少話，不劇透） -->
+  <section class="stage on" id="s0">
+    <header class="top">
+      <div class="kicker">練 習 愛 自 己　·　第 一 堂</div>
+      <h1>我是好人，<br>還是壞人？</h1>
+      <div class="sub">一個關於自己的小小的練習</div>
+    </header>
+    <hr class="rule">
+    <p class="lead center">這個練習，用紙筆也可以做，<br>但在這裡，我陪你一步一步走。<br>找一個不會被打擾的地方，<br>準備好了，我們就開始。</p>
+    <div class="center mt"><button class="b go" id="toMed">開始</button></div>
+  </section>
+
+  <!-- 1 · 靜心 -->
+  <section class="stage" id="s1">
+    <div class="med">
+      <div class="lead center" id="medIntro">先讓心，靜下來一會兒。</div>
+      <div id="medSetup">
+        <div class="opts" id="medOpts">
+          <div class="opt" data-sec="30">30 秒</div>
+          <div class="opt" data-sec="45">45 秒</div>
+          <div class="opt" data-sec="60">60 秒</div>
+          <div class="opt" data-sec="90">90 秒</div>
+        </div>
+        <div class="custom"><input id="medCustom" type="text" inputmode="numeric" placeholder="自訂秒數"></div>
+        <p class="hint" style="margin-top:18px">閉上眼，想想這一週——<br>那些聽了讓你不太舒服的話、那些讓你悶一下的時刻。<br>不用抓著不放，只是讓它們浮上來。<br>聽見磬聲，再張開眼。</p>
+        <div class="center mt"><button class="b go" id="medStart">靜心開始</button></div>
+      </div>
+      <div id="medRun" style="display:none">
+        <div class="breath"></div>
+        <div class="sitting" id="medSit">閉上眼……</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · 五個不舒服的句子 -->
+  <section class="stage" id="s2">
+    <header class="top"><div class="kicker">回 想</div><h1 style="font-size:26px">那些不舒服的話</h1></header>
+    <p class="lead">這一週（或你記得的），有哪些話，你一聽到就不太舒服？<br>寫下五句。別人說的、或自己對自己說的，都可以。</p>
+    <div class="recall" id="recallBox" style="display:none">
+      <div class="rh">你這一週記下的，點一下就能帶進來：</div>
+      <div id="recallChips"></div>
+    </div>
+    <div class="slots" id="sentSlots"></div>
+    <div class="center mt"><button class="b go" id="toTags">寫好了，繼續</button></div>
+  </section>
+
+  <!-- 3 · 貼缺點 -->
+  <section class="stage" id="s3">
+    <header class="top"><div class="kicker">看 看 自 己</div><h1 style="font-size:26px">我有什麼缺點？</h1></header>
+    <p class="lead center">一個一個寫，每寫一個，貼到這個人身上。</p>
+    <div class="tagstage">
+      <div class="human-wrap" id="human3"></div>
+      <div class="counter">已貼上 <b id="c3">0</b> 個（至少 8 個）</div>
+      <div class="addbar">
+        <input class="line" id="flawIn" type="text" placeholder="我的一個缺點是……" maxlength="12">
+        <button class="b go" id="flawAdd">貼上</button>
+      </div>
+      <div class="center mt"><button class="b ghost" id="toMerit" disabled>夠了，換個角度看 →</button></div>
+    </div>
+  </section>
+
+  <!-- 4 · 貼優點 -->
+  <section class="stage" id="s4">
+    <header class="top"><div class="kicker">再 看 看</div><h1 style="font-size:26px">我只有缺點嗎？</h1></header>
+    <p class="lead center">我也有一些好的地方。<br>一個一個寫，一樣貼上去。</p>
+    <div class="tagstage">
+      <div class="human-wrap" id="human4"></div>
+      <div class="counter">又貼上 <b id="c4">0</b> 個（至少 8 個）</div>
+      <div class="addbar">
+        <input class="line" id="meritIn" type="text" placeholder="我的一個優點是……" maxlength="12">
+        <button class="b go" id="meritAdd">貼上</button>
+      </div>
+      <div class="center mt"><button class="b ghost" id="toBig" disabled>我貼滿了 →</button></div>
+    </div>
+  </section>
+
+  <!-- 5 · 大哉問 -->
+  <section class="stage" id="s5">
+    <div class="bigq">
+      <p class="lead center">這個人身上，貼滿了缺點，也貼滿了優點。</p>
+      <div class="q">所以……<br>我是好人？還是壞人？</div>
+      <textarea id="verdict" placeholder="寫下你的答案……"></textarea>
+      <div class="center mt"><button class="b go" id="toKeep">寫好了</button></div>
+    </div>
+  </section>
+
+  <!-- 6 · 留念卡 -->
+  <section class="stage" id="s6">
+    <div class="keep">
+      <div class="kk">帶 走 一 句</div>
+      <div class="ans" id="keepAns"></div>
+      <div class="close">好人、壞人，<br>也許都還不是現在要回答的。<br>先把這個問號，帶在身上。</div>
+    </div>
+    <div class="center mt"><button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button></div>
+    <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var $=function(s){return document.querySelector(s);};
+  var data={ sentences:[], flaws:[], merits:[], verdict:'' };
+
+  // 磬聲（合成，無需外部檔）
+  var AC=null;
+  function bowl(){
+    try{
+      AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+      var t=AC.currentTime;
+      [0,1].forEach(function(k){
+        var o=AC.createOscillator(), g=AC.createGain();
+        o.type='sine'; o.frequency.value=k?880:587.33;
+        g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(k?0.12:0.22,t+0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001,t+4.2);
+        o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+4.3);
+      });
+    }catch(e){}
+  }
+
+  function show(id){
+    document.querySelectorAll('.stage').forEach(function(s){s.classList.remove('on');});
+    $('#'+id).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // --- 0 → 1 ---
+  $('#toMed').addEventListener('click',function(){ show('s1'); });
+
+  // --- 靜心 ---
+  var medSec=30;
+  $('#medOpts').addEventListener('click',function(e){
+    var o=e.target.closest('.opt'); if(!o)return;
+    document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+    o.classList.add('sel'); medSec=parseInt(o.getAttribute('data-sec'),10); $('#medCustom').value='';
+  });
+  $('#medCustom').addEventListener('input',function(){
+    document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+    var v=parseInt(this.value,10); if(!isNaN(v)) medSec=v;
+  });
+  document.querySelector('#medOpts .opt').classList.add('sel');
+  $('#medStart').addEventListener('click',function(){
+    $('#medSetup').style.display='none'; $('#medRun').style.display='block'; $('#medIntro').textContent='';
+    var sit=$('#medSit'); sit.textContent='閉上眼……';
+    var sec=medSec;
+    if(sec<=0){ afterMed(); return; }
+    setTimeout(function(){ sit.textContent='讓那些話，輕輕浮上來……'; }, Math.max(1,sec*1000*0.4));
+    setTimeout(function(){ bowl(); sit.textContent='（磬聲響起）慢慢張開眼。'; setTimeout(afterMed,2200); }, sec*1000);
+  });
+  function afterMed(){ buildRecall(); buildSlots(); show('s2'); }
+
+  // --- 五句：撈回 collect 頁 localStorage ---
+  function buildRecall(){
+    var got=[];
+    try{ var c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(c.items) got=c.items.map(function(x){return x.key;}).filter(Boolean); }catch(e){}
+    if(got.length){
+      $('#recallBox').style.display='block';
+      $('#recallChips').innerHTML=got.slice(0,12).map(function(s,i){return '<span class="chip" data-s="'+i+'">「'+esc(s)+'」</span>';}).join('');
+      $('#recallChips').addEventListener('click',function(e){
+        var ch=e.target.closest('.chip'); if(!ch)return;
+        var txt=got[parseInt(ch.getAttribute('data-s'),10)];
+        var empty=Array.prototype.find.call(document.querySelectorAll('#sentSlots input'),function(inp){return !inp.value.trim();});
+        if(empty){ empty.value=txt; ch.style.opacity='.35'; ch.style.pointerEvents='none'; }
+      });
+    }
+  }
+  function buildSlots(){
+    var h=''; for(var i=1;i<=5;i++){ h+='<div class="slot"><span class="idx">'+i+'</span><input class="line" type="text" placeholder="第 '+i+' 句……"></div>'; }
+    $('#sentSlots').innerHTML=h;
+  }
+  function esc(s){return (s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+
+  $('#toTags').addEventListener('click',function(){
+    data.sentences=Array.prototype.map.call(document.querySelectorAll('#sentSlots input'),function(i){return i.value.trim();}).filter(Boolean);
+    show('s3');
+  });
+
+  // --- 人形 SVG ---
+  var HUMAN='<svg viewBox="0 0 100 190" aria-hidden="true"><g fill="none" stroke="var(--line)" stroke-width="2"><circle cx="50" cy="26" r="18" fill="var(--paper)"/><path fill="var(--paper)" d="M50 44 C34 44 28 56 27 72 L24 120 C23 128 31 130 33 122 L38 86 L38 180 C38 187 48 187 48 180 L50 128 L52 180 C52 187 62 187 62 180 L62 86 L67 122 C69 130 77 128 76 120 L73 72 C72 56 66 44 50 44 Z"/></g></svg>';
+  $('#human3').innerHTML=HUMAN;
+  $('#human4').innerHTML=HUMAN;
+
+  // 預先散佈的貼點（落在人形輪廓內：頭/胸/腹/雙臂/雙腿），百分比座標
+  // viewBox 100x190；人形頭中心約(50,14)、軀幹約y24~60、腿約y60~95
+  // 依「全身交錯」的順序排：頭、腿、臂、胸輪流，前十幾個就能蓋到全身
+  var SPOTS=[
+    [50,13],[43,80],[66,48],[50,33],[57,90],[34,55],
+    [57,70],[43,42],[50,58],[57,82],[34,45],[43,92],
+    [58,40],[66,58],[43,68],[50,24],[57,50],[43,86],
+    [36,62],[57,62],[43,52],[50,44],[57,76],[64,52],
+    [43,74],[57,30],[43,30],[50,66],[57,94],[43,60]
+  ];
+  var spotIdx=0;
+  function placeTag(wrapId, text, cls){
+    var wrap=$('#'+wrapId);
+    var s=SPOTS[spotIdx%SPOTS.length]; spotIdx++;
+    var jx=(Math.random()*3-1.5), jy=(Math.random()*3-1.5);
+    var r=(Math.random()*14-7);
+    var el=document.createElement('div');
+    el.className='tag '+cls; el.textContent=text;
+    el.style.left=Math.max(6,Math.min(94,s[0]+jx))+'%';
+    el.style.top=Math.max(4,Math.min(96,s[1]+jy))+'%';
+    el.style.setProperty('--r',r+'deg');
+    wrap.appendChild(el);
+  }
+
+  // --- 缺點 ---
+  function addFlaw(){
+    var v=$('#flawIn').value.trim(); if(!v)return;
+    data.flaws.push(v); placeTag('human3',v,'flaw'); $('#flawIn').value=''; $('#flawIn').focus();
+    $('#c3').textContent=data.flaws.length;
+    if(data.flaws.length>=8) $('#toMerit').disabled=false;
+  }
+  $('#flawAdd').addEventListener('click',addFlaw);
+  $('#flawIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addFlaw();}});
+  $('#toMerit').addEventListener('click',function(){
+    // 把缺點標籤也延續到優點舞台（同一個人身上）
+    spotIdx=0;
+    data.flaws.forEach(function(t){ placeTag('human4',t,'flaw'); });
+    show('s4'); $('#meritIn').focus();
+  });
+
+  // --- 優點 ---
+  function addMerit(){
+    var v=$('#meritIn').value.trim(); if(!v)return;
+    data.merits.push(v); placeTag('human4',v,'merit'); $('#meritIn').value=''; $('#meritIn').focus();
+    $('#c4').textContent=data.merits.length;
+    if(data.merits.length>=8) $('#toBig').disabled=false;
+  }
+  $('#meritAdd').addEventListener('click',addMerit);
+  $('#meritIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addMerit();}});
+  $('#toBig').addEventListener('click',function(){ show('s5'); });
+
+  // --- 大哉問（填答、不評價）---
+  $('#toKeep').addEventListener('click',function(){
+    data.verdict=$('#verdict').value.trim();
+    $('#keepAns').textContent = data.verdict ? ('「'+data.verdict+'」') : '（你留白了——也好。）';
+    show('s6');
+  });
+
+  // --- 下載 ---
+  $('#dlBtn').addEventListener('click',function(){
+    function pad(n){return String(n).padStart(2,'0');}
+    var d=new Date(), st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    var L=[];
+    L.push('# 練習愛自己 · 第一堂 · 我是好人，還是壞人？');
+    L.push(''); L.push('> 日期：'+st); L.push('');
+    if(data.sentences.length){ L.push('## 那些不舒服的話'); L.push(''); data.sentences.forEach(function(s){L.push('- 「'+s+'」');}); L.push(''); }
+    L.push('## 我寫下的缺點'); L.push(''); data.flaws.forEach(function(s){L.push('- '+s);}); L.push('');
+    L.push('## 我寫下的優點'); L.push(''); data.merits.forEach(function(s){L.push('- '+s);}); L.push('');
+    L.push('## 我是好人，還是壞人？'); L.push(''); L.push(data.verdict||'（留白）'); L.push('');
+    var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
+    var u=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=u; a.download='練習愛自己_好人還是壞人_'+st.replace(/-/g,'')+'.md';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(u);},1500);
+  });
+})();
+</script>
+</body>
+</html>
