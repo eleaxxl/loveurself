@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜漏水的桶子</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF;--paper:#FBFCFB;--ink:#22303A;--ink-soft:#5B6A72;
+  --teal:#2F6F73;--teal-deep:#22555A;--light:#D9A441;--line:#D3DDDA;--dot:#C5D3D0;--on-teal:#FFFFFF;
+  --water:#5E9FA2;--water-deep:#3F8286;--bucket:#E7DFD0;--bucket-edge:#B9AC94;--hole:#4A3B2C;--patch:#D9A441;
+  --hand:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  box-sizing:border-box;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#172126;--paper:#1F2B31;--ink:#E6EEEC;--ink-soft:#A7B6B9;
+  --teal:#6FB3B3;--teal-deep:#95CBC9;--light:#E2B866;--line:#33444B;--dot:#34474E;--on-teal:#172126;
+  --water:#4B8D90;--water-deep:#3A7376;--bucket:#3A3A33;--bucket-edge:#6E6656;--hole:#0f0b07;--patch:#C99B45;
+  color-scheme:dark;
+}}
+*{box-sizing:inherit}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100%}
+.wrap{max-width:600px;margin:0 auto;padding:0 22px}
+.stage{display:none;animation:fade .6s ease}
+.stage.on{display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100dvh;padding:28px 0}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.center{text-align:center}
+.mt{margin-top:26px}
+header.top{text-align:center}
+header.top .kicker{font-family:var(--sans);font-size:13px;letter-spacing:7px;color:var(--teal);margin-bottom:16px;text-indent:7px}
+header.top h1{font-size:32px;font-weight:700;letter-spacing:4px;margin:0 0 10px;color:var(--teal-deep);line-height:1.5}
+header.top .sub{font-size:15px;color:var(--ink-soft);letter-spacing:1.5px;font-family:var(--sans)}
+hr.rule{border:none;border-top:1px solid var(--line);max-width:96px;margin:26px auto}
+.lead{font-size:16px;color:var(--ink-soft);line-height:2;letter-spacing:.5px;margin:16px 0}
+.hint{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.85;letter-spacing:.4px;line-height:1.8}
+button.b{font-family:var(--sans);font-size:15px;letter-spacing:.2em;border-radius:999px;padding:13px 32px;cursor:pointer;text-indent:.2em;transition:opacity .2s,background .2s;border:1px solid var(--teal)}
+button.go{color:var(--on-teal);background:var(--teal)}
+button.go:hover{opacity:.88}
+button.go:disabled{opacity:.45;cursor:default}
+button.ghost{color:var(--teal);background:transparent}
+button.ghost:hover{background:var(--paper)}
+
+/* 靜心 */
+.opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+.opt{font-family:var(--sans);font-size:15px;letter-spacing:1px;color:var(--teal);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:11px 22px;cursor:pointer;transition:all .18s}
+.opt.sel{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.custom input{width:120px;text-align:center;font-family:var(--hand);font-size:15px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink);outline:none}
+.breath{width:12px;height:12px;border-radius:50%;background:var(--teal);margin:24px auto;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(2.4);opacity:1}}
+.sitting{font-size:17px;color:var(--ink-soft);letter-spacing:2px;line-height:2.2;min-height:3em;text-align:center}
+
+/* 遊戲 */
+.game{position:relative;user-select:none;-webkit-user-select:none}
+.status{display:flex;justify-content:space-between;align-items:center;font-family:var(--sans);font-size:13px;color:var(--ink-soft);letter-spacing:.5px;margin-bottom:6px}
+.status b{color:var(--teal)}
+.sky{position:relative;height:92px}
+.slip{position:absolute;left:50%;top:0;transform:translateX(-50%);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 18px;font-size:19px;letter-spacing:1px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.08);max-width:96%;overflow:hidden;text-overflow:ellipsis}
+.slip.fall{animation:fall 1.6s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes fall{0%{top:-40px;opacity:0;transform:translateX(-50%) rotate(-6deg)}60%{opacity:1}100%{top:28px;opacity:1;transform:translateX(-50%) rotate(0deg)}}
+.slip.sink{animation:sink .9s ease-in forwards}
+@keyframes sink{to{top:120px;opacity:0;transform:translateX(-50%) scale(.7)}}
+.bucketbox{position:relative;width:min(300px,78vw,36vh);margin:0 auto}
+.bucketbox svg{display:block;width:100%;height:auto;overflow:visible}
+.drip{animation:drip 1s linear infinite}
+@keyframes drip{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0px),26px)}}
+.fb{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:999px;background:var(--paper);box-shadow:0 3px 12px rgba(0,0,0,.1);opacity:0;pointer-events:none;white-space:nowrap}
+.fb.show{animation:pop 1.3s ease forwards}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-30%) scale(.8)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-80%)}}
+.fb.good{color:var(--teal)} .fb.some{color:var(--light);filter:brightness(.85)} .fb.none{color:var(--ink-soft)} .fb.bad{color:#b4524a}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;min-height:112px}
+.choice{font-family:var(--hand);font-size:17px;letter-spacing:1px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px 10px;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.choice:hover{border-color:var(--teal)}
+.choice:active{transform:scale(.97)}
+.choice:disabled{opacity:.4;cursor:default}
+.howto{font-family:var(--sans);font-size:13px;color:var(--ink-soft);text-align:center;letter-spacing:.5px;margin-top:10px;min-height:1.4em}
+
+/* 桶滿了 */
+.calm{text-align:center}
+.calm .big{font-size:24px;font-weight:700;letter-spacing:3px;color:var(--teal-deep);margin:18px 0 6px}
+
+/* 所以我缺的是 */
+.rows{margin-top:10px}
+.row{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--light);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.row input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;font-family:var(--hand);font-size:16px;color:var(--ink);padding:10px 12px;outline:none}
+.row input:focus{border-color:var(--teal);background:var(--paper)}
+.row input::placeholder{color:var(--dot)}
+.row .s{font-size:17px;margin-bottom:8px}
+.row .so{font-family:var(--sans);font-size:13px;color:var(--teal);letter-spacing:1px;margin:10px 0 6px}
+input.line{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-family:var(--hand);font-size:16px;color:var(--ink);padding:12px 14px;outline:none}
+input.line:focus{border-color:var(--teal)}
+
+/* 留念卡 */
+.keep{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:34px 30px;text-align:center}
+.keep .kk{font-family:var(--sans);font-size:12px;letter-spacing:4px;color:var(--teal);margin-bottom:18px;text-indent:4px}
+.keep .ans{font-size:19px;color:var(--ink);line-height:2;letter-spacing:.5px}
+footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-family:var(--sans);font-size:12px;letter-spacing:3px}
+@media(max-width:560px){header.top h1{font-size:27px}.slip{font-size:17px}.choice{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 0 · 開場 -->
+  <section class="stage on" id="s0">
+    <header class="top">
+      <div class="kicker">練 習 愛 自 己　·　第 一 堂</div>
+      <h1>漏水的桶子</h1>
+      <div class="sub">一個小遊戲</div>
+    </header>
+    <hr class="rule">
+    <p class="lead center">有一個桶子，正在漏水。<br>把它補起來，就這樣。</p>
+    <p class="hint center">建議開聲音。</p>
+    <div class="center mt"><button class="b go" id="toMed">開始</button></div>
+  </section>
+
+  <!-- 1 · 靜心 -->
+  <section class="stage" id="s1">
+    <div id="medSetup" class="center">
+      <p class="lead center">先讓心，靜下來一會兒。</p>
+      <div class="opts" id="medOpts">
+        <div class="opt sel" data-sec="30">30 秒</div>
+        <div class="opt" data-sec="45">45 秒</div>
+        <div class="opt" data-sec="60">60 秒</div>
+        <div class="opt" data-sec="90">90 秒</div>
+      </div>
+      <div class="custom"><input id="medCustom" type="text" inputmode="numeric" placeholder="自訂秒數"></div>
+      <p class="hint" style="margin-top:18px">閉上眼，感覺一下此刻的自己——<br>有沒有哪裡，空空的、少了一點什麼？<br>不用找答案，只是感覺。<br>聽見磬聲，再張開眼。</p>
+      <div class="mt"><button class="b go" id="medStart">靜心開始</button></div>
+    </div>
+    <div id="medRun" style="display:none">
+      <div class="breath"></div>
+      <div class="sitting" id="medSit">閉上眼……</div>
+    </div>
+  </section>
+
+  <!-- 2 · 遊戲 -->
+  <section class="stage" id="s2">
+    <div class="game">
+      <div class="status"><span>破洞 <b id="holeN">3</b></span><span>補到虛線，桶子就不漏了</span></div>
+      <div class="sky"><div class="slip" id="slip"></div></div>
+      <div class="bucketbox" id="bucketBox">
+        <svg viewBox="0 0 200 210" id="bucketSvg" aria-hidden="true">
+          <defs>
+            <clipPath id="inBucket"><polygon points="34,40 166,40 148,196 52,196"/></clipPath>
+          </defs>
+          <!-- 把手 -->
+          <path d="M40 42 C40 -6 160 -6 160 42" fill="none" stroke="var(--bucket-edge)" stroke-width="4"/>
+          <!-- 桶身 -->
+          <polygon points="30,38 170,38 150,198 50,198" fill="var(--bucket)" stroke="var(--bucket-edge)" stroke-width="3" stroke-linejoin="round"/>
+          <!-- 水 -->
+          <g clip-path="url(#inBucket)">
+            <rect id="water" x="0" y="120" width="200" height="220" fill="var(--water)" opacity=".92"/>
+            <path id="wave" d="" fill="var(--water-deep)" opacity=".35"/>
+          </g>
+          <!-- 目標虛線 -->
+          <line x1="38" y1="62" x2="162" y2="62" stroke="var(--teal)" stroke-width="1.6" stroke-dasharray="5 5" opacity=".7"/>
+          <!-- 桶口 -->
+          <ellipse cx="100" cy="38" rx="70" ry="7" fill="none" stroke="var(--bucket-edge)" stroke-width="3"/>
+          <g id="holes"></g>
+        </svg>
+        <div class="fb" id="fb"></div>
+      </div>
+      <div class="choices" id="choices"></div>
+      <div class="howto" id="howto">掉下來一句話。選一個，你覺得補得上的。</div>
+    </div>
+  </section>
+
+  <!-- 3 · 桶滿了（停一下） -->
+  <section class="stage" id="s3">
+    <div class="calm">
+      <div class="bucketbox" id="calmBox"></div>
+      <div class="big">桶子，不漏了。</div>
+      <p class="lead center">看一看這個桶子。<br>剛剛那些洞，是怎麼被補起來的？</p>
+      <div class="mt" style="min-height:56px"><button class="b go" id="toWhy" style="visibility:hidden;opacity:0;transition:opacity 1.2s">繼續</button></div>
+    </div>
+  </section>
+
+  <!-- 4 · 所以我缺的是 -->
+  <section class="stage" id="s4">
+    <header class="top"><div class="kicker">回 到 自 己</div><h1 style="font-size:26px">那些讓我不舒服的話</h1></header>
+    <p class="lead">回想那些讓你不舒服的話。<br>每一句，都像桶子上的一個洞——<br>它刺到的地方，缺的是什麼？</p>
+    <div class="rows" id="rows"></div>
+    <div style="margin-top:18px">
+      <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
+      <input class="line" id="nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
+    </div>
+    <div class="center mt"><button class="b go" id="send">寫好了，送出</button></div>
+    <div class="hint center" id="sendMsg" style="margin-top:12px;min-height:1.4em"></div>
+  </section>
+
+  <!-- 5 · 留念卡 -->
+  <section class="stage" id="s5">
+    <div class="keep">
+      <div class="kk">帶 走 一 句</div>
+      <div class="ans">會痛的地方，<br>是一個缺口，不是一個錯。<br>缺口，可以被補起來。</div>
+    </div>
+    <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
+      <button class="b go" id="againBtn">再玩一次</button>
+    </div>
+    <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s);};
+var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAmYC-E6ShBuEp4q0KA-5me3intGUYJ9mjCEJHhzJXsq/exec';
+
+// ===== 題庫：3＝補很多、1＝補一點、0＝補不了、-1＝反而漏更快 =====
+var BANK=[
+ ['你怎麼又遲到了？',[['重視時間',3],['穿對衣服',1],['買跑車',0],['賺更多錢',0]]],
+ ['這你也不會？',[['願意學',3],['問別人',1],['換工作',0],['裝懂',-1]]],
+ ['你看看人家。',[['看見自己的好',3],['更努力',1],['買名牌',0],['跟人比贏',-1]]],
+ ['我跟你講過幾次了？',[['好好聽一次',3],['做筆記',1],['假裝沒聽到',0],['生氣頂回去',-1]]],
+ ['你就不能積極一點？',[['動手做一件',3],['列計畫',1],['喊口號',0],['滑手機逃避',-1]]],
+ ['你到底在忙什麼？',[['說清楚我在做的',3],['排一下優先',1],['裝很忙',0],['擺臭臉',-1]]],
+ ['交給你我不放心。',[['把一件做穩',3],['多回報進度',1],['攬更多來證明',0],['賭氣說不做了',-1]]],
+ ['你這樣不行啦。',[['問哪裡可以改',3],['再試一次',1],['找藉口',0],['嗆回去',-1]]],
+ ['你根本沒在聽我說話。',[['停下來看著他',3],['放下手機',1],['送他禮物',0],['敷衍說有在聽',-1]]],
+ ['你都不懂我。',[['問他真正的感受',3],['猜他要什麼',1],['買東西哄',0],['說「隨便你」',-1]]],
+ ['算了，我自己來。',[['主動接手一塊',3],['問我能做什麼',1],['走開不管',0],['賭氣擺爛',-1]]],
+ ['你心裡到底有沒有我？',[['讓他知道他重要',3],['多陪一點',1],['發紅包',0],['冷戰',-1]]],
+ ['你變了。',[['坦白我的狀態',3],['回想初衷',1],['否認到底',0],['翻舊帳',-1]]],
+ ['你從來不主動。',[['先開口關心一次',3],['傳個訊息',1],['等他先說',0],['說「我就這樣」',-1]]],
+ ['你怎麼都不說話？',[['說出一句真心話',3],['點點頭回應',1],['滑手機',0],['嘆氣走開',-1]]],
+ ['你是不是不在乎？',[['讓他感覺到在乎',3],['多問一句',1],['解釋一大堆',0],['冷回「隨便」',-1]]],
+ ['什麼時候才賺得到錢？',[['踏實做好手上的',3],['省一點',1],['買樂透',0],['借錢撐場面',-1]]],
+ ['都幾歲了還這樣。',[['接受自己的步調',3],['訂個小目標',1],['砸錢裝年輕',0],['跟年輕人硬比',-1]]],
+ ['大家都過得比我好。',[['看回自己有的',3],['少滑一點社群',1],['跟風買',0],['酸別人',-1]]],
+ ['我是不是又要搞砸了？',[['專注眼前一步',3],['做點準備',1],['乾脆不做了',0],['一直自責',-1]]],
+ ['我怎麼這麼沒用。',[['肯定做到的小事',3],['休息一下',1],['吃一堆',0],['罵自己更兇',-1]]],
+ ['反正我就這樣了。',[['試著動一下下',3],['找個人說說',1],['躺平放棄',0],['自暴自棄',-1]]],
+ ['別人會怎麼看我？',[['問自己怎麼看',3],['做該做的',1],['討好所有人',0],['躲起來',-1]]],
+ ['我不夠好。',[['承認這只是個感覺',3],['對自己溫柔點',1],['拼命證明',0],['攻擊自己',-1]]]
+];
+
+// ===== 聲音 =====
+var AC=null;
+function ac(){ try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();}catch(e){} return AC; }
+function tone(freq,dur,vol,type,slide){
+  var a=ac(); if(!a)return; var t=a.currentTime,o=a.createOscillator(),g=a.createGain();
+  o.type=type||'sine'; o.frequency.setValueAtTime(freq,t); if(slide)o.frequency.exponentialRampToValueAtTime(slide,t+dur);
+  g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+.05);
+}
+function bowl(){ tone(587.33,4.2,.22); tone(880,4.2,.1); }
+function sDing(){ tone(1046,.5,.18); setTimeout(function(){tone(1568,.6,.12);},90); }
+function sSome(){ tone(784,.35,.12); }
+function sNone(){ tone(220,.3,.12,'sine',140); }
+function sPop(){ tone(320,.18,.2,'triangle',90); }
+
+function show(id){ document.querySelectorAll('.stage').forEach(function(s){s.classList.remove('on');}); $('#'+id).classList.add('on'); window.scrollTo(0,0); }
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+// ===== 靜心 =====
+var medSec=30;
+$('#toMed').addEventListener('click',function(){ ac(); show('s1'); });
+$('#medOpts').addEventListener('click',function(e){
+  var o=e.target.closest('.opt'); if(!o)return;
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  o.classList.add('sel'); medSec=parseInt(o.getAttribute('data-sec'),10); $('#medCustom').value='';
+});
+$('#medCustom').addEventListener('input',function(){
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  var v=parseInt(this.value,10); if(!isNaN(v)) medSec=v;
+});
+$('#medStart').addEventListener('click',function(){
+  ac();
+  if(medSec<=0){ startGame(); return; }
+  $('#medSetup').style.display='none'; $('#medRun').style.display='block';
+  setTimeout(function(){ $('#medSit').textContent='感覺那個空空的地方……'; }, medSec*400);
+  setTimeout(function(){ bowl(); $('#medSit').textContent='慢慢張開眼。'; setTimeout(startGame,2200); }, medSec*1000);
+});
+
+// ===== 遊戲狀態 =====
+// 水位 0~100；虛線在 85；桶內水面 y：196（空）→ 40（滿）
+var GOAL=85, level=45, holes=[], deck=[], cur=null, busy=false, running=false, lastT=0;
+var SPOTS=[[66,150],[133,120],[76,96],[128,168],[100,180],[60,124],[140,145],[98,110]];
+function openCount(){ return holes.filter(function(h){return h.open;}).length; }
+function levelY(l){ return 196-(156*l/100); }
+function addHole(){
+  var used=holes.map(function(h){return h.i;});
+  var free=SPOTS.map(function(_,i){return i;}).filter(function(i){return used.indexOf(i)===-1;});
+  if(free.length){ holes.push({i:free[Math.floor(Math.random()*free.length)],open:true}); }
+  else { var p=holes.filter(function(h){return !h.open;}); if(p.length) p[Math.floor(Math.random()*p.length)].open=true; }
+  drawHoles();
+}
+function patchHole(){
+  var o=holes.filter(function(h){return h.open;}); if(!o.length) return false;
+  o[Math.floor(Math.random()*o.length)].open=false; drawHoles(); return true;
+}
+function drawHoles(){
+  var g=$('#holes'), h='';
+  holes.forEach(function(ho){
+    var s=SPOTS[ho.i], x=s[0], y=s[1];
+    if(ho.open){
+      var below = y > levelY(level);  // 水面以下才滴水
+      var dx = x<100 ? -8 : 8;
+      h+='<ellipse cx="'+x+'" cy="'+y+'" rx="5" ry="3.6" fill="var(--hole)"/>';
+      if(below){
+        h+='<circle class="drip" cx="'+(x+(dx/4))+'" cy="'+(y+3)+'" r="2.4" fill="var(--water)" style="--dx:'+dx+'px"/>';
+        h+='<circle class="drip" cx="'+(x+(dx/4))+'" cy="'+(y+3)+'" r="2" fill="var(--water)" style="--dx:'+dx+'px;animation-delay:.5s"/>';
+      }
+    } else {
+      h+='<rect x="'+(x-10)+'" y="'+(y-6)+'" width="20" height="12" rx="3" fill="var(--patch)" transform="rotate('+(x<100?-12:12)+' '+x+' '+y+')" opacity=".95"/>';
+      h+='<line x1="'+(x-6)+'" y1="'+y+'" x2="'+(x+6)+'" y2="'+y+'" stroke="#fff" stroke-width="1" opacity=".6" transform="rotate('+(x<100?-12:12)+' '+x+' '+y+')"/>';
+    }
+  });
+  g.innerHTML=h;
+  $('#holeN').textContent=openCount();
+}
+var phase=0;
+function drawWater(){
+  var y=levelY(level);
+  $('#water').setAttribute('y',y);
+  phase+=0.08;
+  var d='M0 '+(y+200)+' L0 '+y;
+  for(var x=0;x<=200;x+=10){ d+=' L'+x+' '+(y+Math.sin(phase+x/18)*1.6); }
+  d+=' L200 '+(y+200)+' Z';
+  $('#wave').setAttribute('d',d);
+}
+function loop(t){
+  if(!running) return;
+  var dt=lastT?Math.min(.1,(t-lastT)/1000):0; lastT=t;
+  var leak=openCount()*0.55;            // 每個洞每秒漏 0.55%
+  level=Math.max(4,level-leak*dt);      // 不會漏到全空，留一點底
+  drawWater();
+  if(Math.floor(t/400)!==Math.floor((t-dt*1000)/400)) drawHoles(); // 偶爾重畫滴水（水面以下才滴）
+  checkWin();
+  requestAnimationFrame(loop);
+}
+function checkWin(){
+  if(running && openCount()===0 && level>=GOAL){ running=false; setTimeout(win,900); }
+}
+
+function startGame(){
+  level=45; holes=[]; addHole(); addHole(); addHole();
+  deck=shuffle(BANK.map(function(_,i){return i;}));
+  show('s2'); drawWater(); running=true; lastT=0; requestAnimationFrame(loop);
+  setTimeout(nextSlip,700);
+}
+function nextSlip(){
+  if(!running) return;
+  if(!deck.length) deck=shuffle(BANK.map(function(_,i){return i;}));
+  cur=BANK[deck.shift()];
+  var slip=$('#slip'); slip.className='slip'; slip.textContent=cur[0]; void slip.offsetWidth; slip.className='slip fall';
+  var opts=shuffle(cur[1]);
+  $('#choices').innerHTML=opts.map(function(o){ return '<button class="choice" data-w="'+o[1]+'">'+esc(o[0])+'</button>'; }).join('');
+  busy=false;
+}
+function feedback(text,cls){ var f=$('#fb'); f.className='fb'; f.textContent=text; void f.offsetWidth; f.className='fb show '+cls; }
+$('#choices').addEventListener('click',function(e){
+  var b=e.target.closest('.choice'); if(!b||busy||!running) return; busy=true;
+  document.querySelectorAll('.choice').forEach(function(x){x.disabled=true;});
+  b.style.borderColor='var(--teal)';
+  var w=parseInt(b.getAttribute('data-w'),10);
+  if(w===3){ var p=patchHole(); level=Math.min(100,level+(p?10:16)); sDing(); feedback('補上了！','good'); }
+  else if(w===1){ level=Math.min(100,level+5); sSome(); feedback('補了一點點','some'); }
+  else if(w===0){ sNone(); feedback('好像……沒什麼用','none'); }
+  else { addHole(); level=Math.max(4,level-6); sPop(); feedback('啵！又破了一個洞','bad'); }
+  $('#howto').textContent='';
+  $('#slip').className='slip sink';
+  setTimeout(function(){ checkWin(); if(running) nextSlip(); }, 1300);
+});
+
+// ===== 桶滿了 =====
+function win(){
+  bowl();
+  // 把桶子搬到安靜頁
+  var svg=$('#bucketSvg').cloneNode(true); svg.removeAttribute('id');
+  svg.querySelectorAll('[id]').forEach(function(n){ if(n.id==='inBucket'){n.id='inBucket2';} else n.removeAttribute('id'); });
+  svg.querySelectorAll('[clip-path]').forEach(function(n){ n.setAttribute('clip-path','url(#inBucket2)'); });
+  svg.querySelectorAll('.drip').forEach(function(n){ n.remove(); });
+  $('#calmBox').innerHTML=''; $('#calmBox').appendChild(svg);
+  show('s3');
+  var btn=$('#toWhy'); btn.style.visibility='hidden'; btn.style.opacity='0';
+  setTimeout(function(){ btn.style.visibility='visible'; btn.style.opacity='1'; }, 4000);
+}
+$('#toWhy').addEventListener('click',function(){ buildRows(); show('s4'); });
+
+// ===== 所以我缺的是 =====
+var collected=[];
+try{ var c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(c.items) collected=c.items.map(function(x){return x.key;}).filter(Boolean); if(c.nick) $('#nick').value=c.nick; }catch(e){}
+function buildRows(){
+  var src=collected.slice(0,5); while(src.length<3) src.push('');
+  $('#rows').innerHTML=src.map(function(s,i){
+    return '<div class="row">'
+      +'<input class="sent" type="text" value="'+esc(s)+'" placeholder="一句讓我不舒服的話……">'
+      +'<div class="so">所以我缺的是——</div>'
+      +'<input class="lack" type="text" placeholder="……">'
+      +'</div>';
+  }).join('')+'<div class="center"><button class="b ghost" id="moreRow" style="padding:8px 22px;font-size:13px">＋ 再一句</button></div>';
+  $('#moreRow').addEventListener('click',function(){
+    var d=document.createElement('div'); d.className='row';
+    d.innerHTML='<input class="sent" type="text" placeholder="一句讓我不舒服的話……"><div class="so">所以我缺的是——</div><input class="lack" type="text" placeholder="……">';
+    this.parentNode.parentNode.insertBefore(d,this.parentNode);
+  });
+}
+function pairs(){
+  var out=[];
+  document.querySelectorAll('#rows .row').forEach(function(r){
+    var s=r.querySelector('.sent').value.trim(), l=r.querySelector('.lack').value.trim();
+    if(s||l) out.push({s:s,l:l});
+  });
+  return out;
+}
+$('#send').addEventListener('click',function(){
+  var btn=this,msg=$('#sendMsg'),nick=$('#nick').value.trim(),ps=pairs();
+  if(!ps.length){ msg.style.color='#b4524a'; msg.textContent='至少寫一句。'; return; }
+  if(!nick){ msg.style.color='#b4524a'; msg.textContent='送出前，請先填上你的暱稱。'; $('#nick').focus(); return; }
+  msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
+  var text=ps.map(function(p){ return '「'+p.s+'」→ 我缺的是：'+(p.l||'（沒寫）'); }).join('\n');
+  fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({name:nick,lesson:'第一堂 練習二',answers:[{q:'不舒服的話 → 所以我缺的是',a:text}]})})
+    .then(function(r){return r.json();})
+    .then(function(res){ if(!res||!res.ok) throw new Error(); show('s5'); })
+    .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
+});
+
+// ===== 留念 =====
+$('#againBtn').addEventListener('click',function(){ location.reload(); });
+$('#dlBtn').addEventListener('click',function(){
+  function pad(n){return String(n).padStart(2,'0');}
+  var d=new Date(),st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  var L=['# 練習愛自己 · 第一堂 · 漏水的桶子','','> 日期：'+st,'','## 那些讓我不舒服的話',''];
+  pairs().forEach(function(p){ L.push('- 「'+p.s+'」'); L.push('  - 所以我缺的是：'+(p.l||'（沒寫）')); });
+  var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
+  var u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u; a.download='練習愛自己_漏水的桶子_'+st.replace(/-/g,'')+'.md';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(u);},1500);
+});
+})();
+</script>
+</body>
+</html>
