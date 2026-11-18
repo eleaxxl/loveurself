@@ -194,7 +194,12 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
       <p class="lead center">這個人身上，貼滿了缺點，也貼滿了優點。</p>
       <div class="q">所以……<br>我是好人？還是壞人？</div>
       <textarea id="verdict" placeholder="寫下你的答案……"></textarea>
-      <div class="center mt"><button class="b go" id="toKeep">寫好了</button></div>
+      <div style="max-width:460px;margin:22px auto 0;text-align:left">
+        <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
+        <input class="line" id="p1nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
+      </div>
+      <div class="center mt"><button class="b go" id="toKeep">寫好了，送出</button></div>
+      <div class="hint center" id="sendMsg" style="margin-top:12px;min-height:1.4em"></div>
     </div>
   </section>
 
@@ -347,10 +352,27 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   $('#toBig').addEventListener('click',function(){ show('s5'); });
 
   // --- 大哉問（填答、不評價）---
+  // 暱稱：自動帶入收集頁用過的
+  try{ var cc=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(cc.nick) $('#p1nick').value=cc.nick; }catch(e){}
+
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAmYC-E6ShBuEp4q0KA-5me3intGUYJ9mjCEJHhzJXsq/exec';
   $('#toKeep').addEventListener('click',function(){
+    var btn=this, msg=$('#sendMsg');
     data.verdict=$('#verdict').value.trim();
-    $('#keepAns').textContent = data.verdict ? ('「'+data.verdict+'」') : '（你留白了——也好。）';
-    show('s6');
+    var nick=$('#p1nick').value.trim();
+    if(!nick){ msg.style.color='#b4524a'; msg.textContent='送出前，請先填上你的暱稱。'; $('#p1nick').focus(); return; }
+    msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
+    fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({name:nick,lesson:'第一堂 練習一',answers:[
+        {q:'不舒服的話',a:data.sentences.join('\n')},
+        {q:'我是好人還是壞人',a:data.verdict}]})})
+      .then(function(r){return r.json();})
+      .then(function(res){
+        if(!res||!res.ok) throw new Error();
+        $('#keepAns').textContent = data.verdict ? ('「'+data.verdict+'」') : '（你留白了——也好。）';
+        show('s6');
+      })
+      .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
   });
 
   // --- 下載 ---
