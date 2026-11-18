@@ -64,9 +64,16 @@ button.ghost:hover{background:var(--paper)}
 @keyframes fall{0%{top:-40px;opacity:0;transform:translateX(-50%) rotate(-6deg)}60%{opacity:1}100%{top:28px;opacity:1;transform:translateX(-50%) rotate(0deg)}}
 .slip.sink{animation:sink .9s ease-in forwards}
 @keyframes sink{to{top:120px;opacity:0;transform:translateX(-50%) scale(.7)}}
-.bucketbox{position:relative;width:min(300px,78vw,36vh);margin:0 auto}
+.bucketbox{position:relative;width:min(360px,88vw,46vh);margin:0 auto}
 .bucketbox svg{display:block;width:100%;height:auto;overflow:visible}
-.drip{animation:drip 1s linear infinite}
+.jet{fill:none;stroke:var(--water);stroke-linecap:round;opacity:.95}
+.jetc{fill:none;stroke:#fff;stroke-linecap:round;stroke-dasharray:3 9;animation:flow .35s linear infinite;opacity:.55}
+@keyframes flow{to{stroke-dashoffset:-12}}
+.splash{fill:var(--water);animation:spl .6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spl{0%{opacity:.9;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-7px) scale(.4)}}
+.empty{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:color-mix(in srgb,var(--bg) 82%,transparent);border-radius:16px;text-align:center}
+.empty.on{display:flex;animation:fade .6s ease}
+.empty .et{font-size:22px;font-weight:700;letter-spacing:2px;color:var(--teal-deep);line-height:1.7;margin-bottom:18px}
 @keyframes drip{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0px),26px)}}
 .fb{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-family:var(--sans);font-size:17px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:999px;background:var(--paper);box-shadow:0 3px 12px rgba(0,0,0,.1);opacity:0;pointer-events:none;white-space:nowrap}
 .fb.show{animation:pop 1.3s ease forwards}
@@ -144,10 +151,13 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
       <div class="status"><span>破洞 <b id="holeN">3</b></span><span>補到虛線，桶子就不漏了</span></div>
       <div class="sky"><div class="slip" id="slip"></div></div>
       <div class="bucketbox" id="bucketBox">
-        <svg viewBox="0 0 200 210" id="bucketSvg" aria-hidden="true">
+        <svg viewBox="-20 -6 240 250" id="bucketSvg" aria-hidden="true">
           <defs>
             <clipPath id="inBucket"><polygon points="34,40 166,40 148,196 52,196"/></clipPath>
           </defs>
+          <!-- 地面與水窪 -->
+          <line x1="-20" y1="236" x2="220" y2="236" stroke="var(--line)" stroke-width="1.5"/>
+          <ellipse id="puddle" cx="100" cy="236" rx="0" ry="0" fill="var(--water)" opacity=".55"/>
           <!-- 把手 -->
           <path d="M40 42 C40 -6 160 -6 160 42" fill="none" stroke="var(--bucket-edge)" stroke-width="4"/>
           <!-- 桶身 -->
@@ -161,9 +171,11 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
           <line x1="38" y1="62" x2="162" y2="62" stroke="var(--teal)" stroke-width="1.6" stroke-dasharray="5 5" opacity=".7"/>
           <!-- 桶口 -->
           <ellipse cx="100" cy="38" rx="70" ry="7" fill="none" stroke="var(--bucket-edge)" stroke-width="3"/>
+          <g id="streams"></g>
           <g id="holes"></g>
         </svg>
         <div class="fb" id="fb"></div>
+        <div class="empty" id="emptyBox"><div class="et">你的水桶空了，<br>要再試一次嗎？</div><button class="b go" id="retry">再試一次</button></div>
       </div>
       <div class="choices" id="choices"></div>
       <div class="howto" id="howto">掉下來一句話。選一個，你覺得補得上的。</div>
@@ -189,7 +201,8 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
       <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
       <input class="line" id="nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
     </div>
-    <div class="center mt"><button class="b go" id="send">寫好了，送出</button></div>
+    <div class="hint center" id="needMsg" style="margin-top:22px">每一句都寫下「所以我缺的是」，再填上暱稱，送出按鈕就會出現。</div>
+    <div class="center mt"><button class="b go" id="send" style="display:none">寫好了，送出</button></div>
     <div class="hint center" id="sendMsg" style="margin-top:12px;min-height:1.4em"></div>
   </section>
 
@@ -197,7 +210,7 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s5">
     <div class="keep">
       <div class="kk">帶 走 一 句</div>
-      <div class="ans">會痛的地方，<br>是一個缺口，不是一個錯。<br>缺口，可以被補起來。</div>
+      <div class="ans">我不是不好，<br>我只是「不夠」。</div>
     </div>
     <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
@@ -283,40 +296,75 @@ $('#medStart').addEventListener('click',function(){
 
 // ===== 遊戲狀態 =====
 // 水位 0~100；虛線在 85；桶內水面 y：196（空）→ 40（滿）
-var GOAL=85, level=45, holes=[], deck=[], cur=null, busy=false, running=false, lastT=0;
-var SPOTS=[[66,150],[133,120],[76,96],[128,168],[100,180],[60,124],[140,145],[98,110]];
+var GOAL=85, START=45, level=START, lost=0, holes=[], deck=[], cur=null, busy=false, running=false, lastT=0;
+// 破洞位置（最後一個在桶底，保證水能流光）
+var SPOTS=[[66,150],[133,120],[76,96],[128,168],[60,124],[140,145],[98,110],[90,186]];
+var BOTTOM=SPOTS.length-1;
 function openCount(){ return holes.filter(function(h){return h.open;}).length; }
 function levelY(l){ return 196-(156*l/100); }
-function addHole(){
+function addHole(prefer){
   var used=holes.map(function(h){return h.i;});
   var free=SPOTS.map(function(_,i){return i;}).filter(function(i){return used.indexOf(i)===-1;});
-  if(free.length){ holes.push({i:free[Math.floor(Math.random()*free.length)],open:true}); }
-  else { var p=holes.filter(function(h){return !h.open;}); if(p.length) p[Math.floor(Math.random()*p.length)].open=true; }
+  if(prefer!=null && free.indexOf(prefer)!==-1){ holes.push({i:prefer,open:true}); }
+  else if(free.length){
+    // 選錯時偏向水面以下的位置，比較有感
+    var under=free.filter(function(i){return SPOTS[i][1]>levelY(level)+4;});
+    var pool=under.length?under:free;
+    holes.push({i:pool[Math.floor(Math.random()*pool.length)],open:true});
+  } else { var p=holes.filter(function(h){return !h.open;}); if(p.length) p[Math.floor(Math.random()*p.length)].open=true; }
   drawHoles();
 }
 function patchHole(){
+  // 優先補正在噴水（水面以下）的洞
   var o=holes.filter(function(h){return h.open;}); if(!o.length) return false;
-  o[Math.floor(Math.random()*o.length)].open=false; drawHoles(); return true;
+  var wet=o.filter(function(h){return SPOTS[h.i][1]>levelY(level);});
+  var pick=(wet.length?wet:o); pick=pick[Math.floor(Math.random()*pick.length)];
+  pick.open=false; drawHoles(); return true;
 }
+var NS='http://www.w3.org/2000/svg';
 function drawHoles(){
-  var g=$('#holes'), h='';
+  var g=$('#holes'), h='', sg=$('#streams');
+  sg.innerHTML='';
   holes.forEach(function(ho){
-    var s=SPOTS[ho.i], x=s[0], y=s[1];
+    var s=SPOTS[ho.i], x=s[0], y=s[1], rot=(x<100?-12:12);
     if(ho.open){
-      var below = y > levelY(level);  // 水面以下才滴水
-      var dx = x<100 ? -8 : 8;
-      h+='<ellipse cx="'+x+'" cy="'+y+'" rx="5" ry="3.6" fill="var(--hole)"/>';
-      if(below){
-        h+='<circle class="drip" cx="'+(x+(dx/4))+'" cy="'+(y+3)+'" r="2.4" fill="var(--water)" style="--dx:'+dx+'px"/>';
-        h+='<circle class="drip" cx="'+(x+(dx/4))+'" cy="'+(y+3)+'" r="2" fill="var(--water)" style="--dx:'+dx+'px;animation-delay:.5s"/>';
-      }
+      h+='<ellipse cx="'+x+'" cy="'+y+'" rx="4.6" ry="3.4" fill="var(--hole)"/>';
+      var gr=document.createElementNS(NS,'g'); gr.setAttribute('class','jg'); gr.dataset.i=ho.i;
+      gr.innerHTML='<path class="jet"/><path class="jetc"/><circle class="splash" r="2.2"/><circle class="splash" r="1.6" style="animation-delay:.3s"/>';
+      sg.appendChild(gr);
     } else {
-      h+='<rect x="'+(x-10)+'" y="'+(y-6)+'" width="20" height="12" rx="3" fill="var(--patch)" transform="rotate('+(x<100?-12:12)+' '+x+' '+y+')" opacity=".95"/>';
-      h+='<line x1="'+(x-6)+'" y1="'+y+'" x2="'+(x+6)+'" y2="'+y+'" stroke="#fff" stroke-width="1" opacity=".6" transform="rotate('+(x<100?-12:12)+' '+x+' '+y+')"/>';
+      h+='<rect x="'+(x-10)+'" y="'+(y-6)+'" width="20" height="12" rx="3" fill="var(--patch)" transform="rotate('+rot+' '+x+' '+y+')"/>';
+      h+='<line x1="'+(x-6)+'" y1="'+y+'" x2="'+(x+6)+'" y2="'+y+'" stroke="#fff" stroke-width="1" opacity=".6" transform="rotate('+rot+' '+x+' '+y+')"/>';
     }
   });
   g.innerHTML=h;
   $('#holeN').textContent=openCount();
+  updateStreams();
+}
+// 水柱：越深的洞，水壓越大、噴越遠、越粗；水面以上的洞不噴
+function updateStreams(){
+  var surf=levelY(level);
+  document.querySelectorAll('#streams .jg').forEach(function(g){
+    var i=+g.dataset.i, s=SPOTS[i], x=s[0], y=s[1], depth=y-surf;
+    var jet=g.querySelector('.jet'), jc=g.querySelector('.jetc'), sp=g.querySelectorAll('.splash');
+    if(depth<=0.5 || level<=0){ g.style.display='none'; return; }
+    g.style.display='';
+    var dir = x<100?-1:(x>100?1:(i%2?1:-1));
+    var reach=8+Math.sqrt(depth)*5;          // 越深噴越遠
+    var w=Math.min(7,2.4+depth*0.05);        // 越深越粗
+    var ground=236, x2=x+dir*reach, xe=x2+dir*reach*0.12;
+    var d='M'+x+' '+y+' C'+(x+dir*reach*0.6)+' '+(y-2)+' '+x2+' '+(y+(ground-y)*0.3)+' '+xe+' '+ground;
+    jet.setAttribute('d',d); jet.setAttribute('stroke-width',w);
+    jc.setAttribute('d',d); jc.setAttribute('stroke-width',Math.max(1,w*0.35));
+    sp[0].setAttribute('cx',xe-dir*3); sp[0].setAttribute('cy',ground-2);
+    sp[1].setAttribute('cx',xe+dir*4); sp[1].setAttribute('cy',ground-1);
+  });
+}
+function leakRate(){
+  // 每個「泡在水裡」的破洞，依深度漏水
+  var surf=levelY(level), r=0;
+  holes.forEach(function(h){ if(!h.open) return; var d=SPOTS[h.i][1]-surf; if(d>0) r+=0.25+Math.min(0.8,d*0.008); });
+  return r;
 }
 var phase=0;
 function drawWater(){
@@ -324,27 +372,36 @@ function drawWater(){
   $('#water').setAttribute('y',y);
   phase+=0.08;
   var d='M0 '+(y+200)+' L0 '+y;
-  for(var x=0;x<=200;x+=10){ d+=' L'+x+' '+(y+Math.sin(phase+x/18)*1.6); }
+  for(var x=0;x<=200;x+=10){ d+=' L'+x+' '+(y+Math.sin(phase+x/18)*1.4); }
   d+=' L200 '+(y+200)+' Z';
   $('#wave').setAttribute('d',d);
+  var pr=Math.min(110,lost*0.9); $('#puddle').setAttribute('rx',pr); $('#puddle').setAttribute('ry',Math.min(7,pr*0.08));
 }
 function loop(t){
   if(!running) return;
   var dt=lastT?Math.min(.1,(t-lastT)/1000):0; lastT=t;
-  var leak=openCount()*0.55;            // 每個洞每秒漏 0.55%
-  level=Math.max(4,level-leak*dt);      // 不會漏到全空，留一點底
-  drawWater();
-  if(Math.floor(t/400)!==Math.floor((t-dt*1000)/400)) drawHoles(); // 偶爾重畫滴水（水面以下才滴）
+  var r=leakRate()*dt;
+  level=Math.max(0,level-r); lost+=r;
+  drawWater(); updateStreams();
+  if(level<=0){ running=false; setTimeout(emptyOut,500); return; }
   checkWin();
   requestAnimationFrame(loop);
 }
 function checkWin(){
   if(running && openCount()===0 && level>=GOAL){ running=false; setTimeout(win,900); }
 }
+function emptyOut(){
+  sNone();
+  document.querySelectorAll('.choice').forEach(function(x){x.disabled=true;});
+  $('#slip').className='slip sink';
+  $('#emptyBox').classList.add('on');
+}
+$('#retry').addEventListener('click',function(){ $('#emptyBox').classList.remove('on'); startGame(); });
 
 function startGame(){
-  level=45; holes=[]; addHole(); addHole(); addHole();
+  level=START; lost=0; holes=[]; addHole(BOTTOM); addHole(); addHole();
   deck=shuffle(BANK.map(function(_,i){return i;}));
+  $('#howto').textContent='掉下來一句話。選一個，你覺得補得上的。';
   show('s2'); drawWater(); running=true; lastT=0; requestAnimationFrame(loop);
   setTimeout(nextSlip,700);
 }
@@ -366,7 +423,8 @@ $('#choices').addEventListener('click',function(e){
   if(w===3){ var p=patchHole(); level=Math.min(100,level+(p?10:16)); sDing(); feedback('補上了！','good'); }
   else if(w===1){ level=Math.min(100,level+5); sSome(); feedback('補了一點點','some'); }
   else if(w===0){ sNone(); feedback('好像……沒什麼用','none'); }
-  else { addHole(); level=Math.max(4,level-6); sPop(); feedback('啵！又破了一個洞','bad'); }
+  else { addHole(); level=Math.max(0,level-3); sPop(); feedback('啵！又破了一個洞','bad'); }
+  drawWater(); updateStreams();
   $('#howto').textContent='';
   $('#slip').className='slip sink';
   setTimeout(function(){ checkWin(); if(running) nextSlip(); }, 1300);
@@ -375,21 +433,20 @@ $('#choices').addEventListener('click',function(e){
 // ===== 桶滿了 =====
 function win(){
   bowl();
-  // 把桶子搬到安靜頁
   var svg=$('#bucketSvg').cloneNode(true); svg.removeAttribute('id');
   svg.querySelectorAll('[id]').forEach(function(n){ if(n.id==='inBucket'){n.id='inBucket2';} else n.removeAttribute('id'); });
   svg.querySelectorAll('[clip-path]').forEach(function(n){ n.setAttribute('clip-path','url(#inBucket2)'); });
-  svg.querySelectorAll('.drip').forEach(function(n){ n.remove(); });
+  svg.querySelectorAll('.jg').forEach(function(n){ n.remove(); });
   $('#calmBox').innerHTML=''; $('#calmBox').appendChild(svg);
   show('s3');
   var btn=$('#toWhy'); btn.style.visibility='hidden'; btn.style.opacity='0';
   setTimeout(function(){ btn.style.visibility='visible'; btn.style.opacity='1'; }, 4000);
 }
-$('#toWhy').addEventListener('click',function(){ buildRows(); show('s4'); });
+$('#toWhy').addEventListener('click',function(){ buildRows(); show('s4'); validate(); });
 
 // ===== 所以我缺的是 =====
 var collected=[];
-try{ var c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(c.items) collected=c.items.map(function(x){return x.key;}).filter(Boolean); if(c.nick) $('#nick').value=c.nick; }catch(e){}
+try{ var c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(c.items) collected=c.items.map(function(x){return (x.key||'').trim();}).filter(function(k,i,a){return k && a.indexOf(k)===i;}); if(c.nick) $('#nick').value=c.nick; }catch(e){}
 function buildRows(){
   var src=collected.slice(0,5); while(src.length<3) src.push('');
   $('#rows').innerHTML=src.map(function(s,i){
@@ -403,8 +460,18 @@ function buildRows(){
     var d=document.createElement('div'); d.className='row';
     d.innerHTML='<input class="sent" type="text" placeholder="一句讓我不舒服的話……"><div class="so">所以我缺的是——</div><input class="lack" type="text" placeholder="……">';
     this.parentNode.parentNode.insertBefore(d,this.parentNode);
+    validate();
   });
 }
+function validate(){
+  var rows=document.querySelectorAll('#rows .row'), full=0, half=0;
+  rows.forEach(function(r){ var a=r.querySelector('.sent').value.trim(), b=r.querySelector('.lack').value.trim(); if(a&&b) full++; else if(a||b) half++; });
+  var ok = full>=1 && half===0 && $('#nick').value.trim();
+  $('#send').style.display = ok ? 'inline-block' : 'none';
+  $('#needMsg').style.display = ok ? 'none' : 'block';
+}
+$('#rows').addEventListener('input',validate);
+$('#nick').addEventListener('input',validate);
 function pairs(){
   var out=[];
   document.querySelectorAll('#rows .row').forEach(function(r){
