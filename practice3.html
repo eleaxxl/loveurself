@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜我不夠好？</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF;--paper:#FBFCFB;--ink:#22303A;--ink-soft:#5B6A72;
+  --teal:#2F6F73;--teal-deep:#22555A;--light:#D9A441;--line:#D3DDDA;--dot:#C5D3D0;--on-teal:#FFFFFF;
+  --night:#16232A;--night-ink:#C9D6D5;
+  --hand:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  box-sizing:border-box;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#172126;--paper:#1F2B31;--ink:#E6EEEC;--ink-soft:#A7B6B9;
+  --teal:#6FB3B3;--teal-deep:#95CBC9;--light:#E2B866;--line:#33444B;--dot:#34474E;--on-teal:#172126;
+  --night:#0E161A;--night-ink:#A7B6B9;
+  color-scheme:dark;
+}}
+*{box-sizing:inherit}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1.9;-webkit-font-smoothing:antialiased;min-height:100%}
+.wrap{max-width:580px;margin:0 auto;padding:0 24px}
+.stage{display:none;animation:fade .7s ease}
+.stage.on{display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 0}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.center{text-align:center}
+.mt{margin-top:28px}
+header.top{text-align:center}
+header.top .kicker{font-family:var(--sans);font-size:13px;letter-spacing:7px;color:var(--teal);margin-bottom:16px;text-indent:7px}
+header.top h1{font-size:32px;font-weight:700;letter-spacing:4px;margin:0 0 10px;color:var(--teal-deep);line-height:1.5}
+header.top .sub{font-size:15px;color:var(--ink-soft);letter-spacing:1.5px;font-family:var(--sans)}
+hr.rule{border:none;border-top:1px solid var(--line);max-width:96px;margin:26px auto}
+.lead{font-size:17px;color:var(--ink-soft);line-height:2.1;letter-spacing:.5px;margin:14px 0}
+.ask{font-size:19px;letter-spacing:.5px;line-height:1.9;margin:0 0 12px}
+.hint{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.85;letter-spacing:.4px;line-height:1.8}
+textarea,input.line{width:100%;background:var(--paper);border:1px solid var(--line);border-radius:12px;font-family:var(--hand);font-size:17px;color:var(--ink);line-height:1.8;letter-spacing:.5px;padding:13px 16px;outline:none;transition:border-color .2s}
+textarea{resize:vertical;min-height:90px}
+textarea:focus,input.line:focus{border-color:var(--teal)}
+textarea::placeholder,input.line::placeholder{color:var(--dot)}
+.fld{margin-bottom:22px}
+button.b{font-family:var(--sans);font-size:15px;letter-spacing:.2em;border-radius:999px;padding:13px 32px;cursor:pointer;text-indent:.2em;transition:opacity .3s,background .2s;border:1px solid var(--teal)}
+button.go{color:var(--on-teal);background:var(--teal)}
+button.go:hover{opacity:.88}
+button.ghost{color:var(--teal);background:transparent}
+.hide{visibility:hidden;opacity:0}
+
+/* 靜心選項 */
+.opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+.opt{font-family:var(--sans);font-size:15px;letter-spacing:1px;color:var(--teal);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:11px 22px;cursor:pointer}
+.opt.sel{background:var(--teal);color:var(--on-teal);border-color:var(--teal)}
+.custom input{width:120px;text-align:center;font-family:var(--hand);font-size:15px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink);outline:none}
+
+/* 閉眼的暗幕 */
+#dark{position:fixed;inset:0;z-index:50;background:var(--night);display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s}
+#dark.on{display:flex}
+#dark.show{opacity:1}
+#dark .breath{width:12px;height:12px;border-radius:50%;background:var(--night-ink);opacity:.5;animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(2.4);opacity:.8}}
+#dark .dtxt{color:var(--night-ink);font-size:17px;letter-spacing:3px;margin-top:34px;opacity:.75;min-height:2em;text-align:center;line-height:2}
+#dark .marks{display:flex;gap:16px;margin-top:22px}
+#dark .marks span{width:8px;height:8px;border-radius:50%;border:1px solid var(--night-ink);opacity:.5;transition:all .6s}
+#dark .marks span.lit{background:var(--night-ink);opacity:.9}
+
+/* 他的那句話 */
+.voice{font-size:22px;font-weight:700;color:var(--teal-deep);letter-spacing:2px;text-align:center;margin:18px 0;line-height:1.7}
+
+/* 和解四句 */
+.vow{text-align:center}
+.vow .no{font-family:var(--sans);font-size:12px;letter-spacing:5px;color:var(--teal);margin-bottom:22px;text-indent:5px}
+.vow .line{font-size:28px;font-weight:700;color:var(--teal-deep);letter-spacing:3px;line-height:1.8}
+.vow .sub{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin-top:14px;letter-spacing:.5px;line-height:1.8}
+.vow .how{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.8;margin-top:34px;letter-spacing:.5px;line-height:1.8}
+
+/* 留念卡 */
+.keep{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:36px 30px;text-align:center}
+.keep .kk{font-family:var(--sans);font-size:12px;letter-spacing:4px;color:var(--teal);margin-bottom:18px;text-indent:4px}
+.keep .ans{font-size:20px;color:var(--ink);line-height:2;letter-spacing:.5px}
+footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-family:var(--sans);font-size:12px;letter-spacing:3px}
+@media(max-width:560px){header.top h1{font-size:27px}.vow .line{font-size:24px}}
+</style>
+</head>
+<body>
+<div id="dark"><div class="breath"></div><div class="dtxt" id="dtxt"></div><div class="marks" id="marks" style="display:none"><span></span><span></span><span></span></div></div>
+
+<div class="wrap">
+
+  <!-- 0 · 開場 -->
+  <section class="stage on" id="s0">
+    <header class="top">
+      <div class="kicker">練 習 愛 自 己　·　第 一 堂</div>
+      <h1>我不夠好？</h1>
+      <div class="sub">和那個聲音，見一面</div>
+    </header>
+    <hr class="rule">
+    <p class="lead center">這個練習，有一些時間要閉著眼睛。<br>找一個安靜、不會被打擾的地方。<br>建議戴上耳機，聽磬聲。</p>
+    <div class="center mt"><button class="b go" id="toMed">開始</button></div>
+  </section>
+
+  <!-- 1 · 靜心：去找那個聲音 -->
+  <section class="stage" id="s1">
+    <div class="center">
+      <p class="lead center">先靜下來。</p>
+      <div class="opts" id="medOpts">
+        <div class="opt" data-sec="30">30 秒</div>
+        <div class="opt sel" data-sec="45">45 秒</div>
+        <div class="opt" data-sec="60">60 秒</div>
+        <div class="opt" data-sec="90">90 秒</div>
+      </div>
+      <div class="custom"><input id="medCustom" type="text" inputmode="numeric" placeholder="自訂秒數"></div>
+      <p class="hint" style="margin-top:18px">這一次，不是要你放鬆——<br>是要你，往心裡找一個聲音。<br>那個你很熟的、會說「我不夠好」的聲音。<br>不用找它的理由，只要感覺它在哪裡。<br>聽見磬聲，再張開眼。</p>
+      <div class="mt"><button class="b go" id="medStart">閉上眼，開始</button></div>
+    </div>
+  </section>
+
+  <!-- 2 · 讓它現身 -->
+  <section class="stage" id="s2">
+    <div class="ask">如果那個聲音有形狀——<br>它是什麼形狀？什麼顏色？<br>硬的、軟的？溫的、冷的？<br>它住在你身體的哪裡？</div>
+    <textarea id="aShape" placeholder="寫下它的樣子……"></textarea>
+    <div class="center mt"><button class="b go hide" id="go2">寫好了</button></div>
+  </section>
+
+  <!-- 3 · 認識它 -->
+  <section class="stage" id="s3">
+    <div class="fld">
+      <div class="ask">它最常在什麼時候醒來？</div>
+      <textarea id="aWhen" placeholder="什麼情境、什麼時刻……" style="min-height:70px"></textarea>
+    </div>
+    <div class="fld">
+      <div class="ask">它醒來，第一句話說什麼？</div>
+      <input class="line" id="aWord" type="text" placeholder="原原本本寫下那句話……">
+    </div>
+    <div class="center mt"><button class="b go hide" id="go3">寫好了</button></div>
+  </section>
+
+  <!-- 4 · 讓它講三次 -->
+  <section class="stage" id="s4">
+    <p class="lead">這個反覆回來的聲音，有一個名字，叫<b>習氣</b>。<br>它不是你的缺陷，<br>只是過去很多次相同的感受，留下來的痕跡。</p>
+    <p class="lead">等一下，閉上眼，請它把這句話，對你講三次：</p>
+    <div class="voice" id="voice"></div>
+    <p class="lead">你不閃、不反駁，就看著它，聽。<br>如果想逃、想快點結束，認出它：「啊，我想逃了。」<br>然後回來，繼續看著它。</p>
+    <p class="hint center">每講一次，會有一聲磬。三聲之後，再張開眼。</p>
+    <div class="center mt"><button class="b go" id="go4">閉上眼，聽它講</button></div>
+  </section>
+
+  <!-- 5 · 和解四句 -->
+  <section class="stage" id="s5">
+    <div class="vow">
+      <div class="no" id="vowNo"></div>
+      <div class="line" id="vowLine"></div>
+      <div class="sub" id="vowSub"></div>
+      <div class="how">記住這一句。<br>閉上眼，找到它，對它說。<br>磬聲響了，再張開眼。</div>
+      <div class="mt"><button class="b go" id="vowGo">閉上眼，對它說</button></div>
+    </div>
+  </section>
+
+  <!-- 6 · 感想 -->
+  <section class="stage" id="s6">
+    <div class="ask">做完了。<br>現在的你，感覺怎麼樣？<br>想留一句話給剛剛的自己，也可以。</div>
+    <textarea id="aFeel" placeholder="寫下來……"></textarea>
+    <div style="margin-top:18px">
+      <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
+      <input class="line" id="nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
+    </div>
+    <div class="hint center" id="needMsg" style="margin-top:20px">寫下感受、填上暱稱，送出按鈕就會出現。</div>
+    <div class="center mt"><button class="b go" id="send" style="display:none">寫好了，送出</button></div>
+    <div class="hint center" id="sendMsg" style="margin-top:12px;min-height:1.4em"></div>
+  </section>
+
+  <!-- 7 · 留念卡 -->
+  <section class="stage" id="s7">
+    <div class="keep">
+      <div class="kk">帶 走 一 句</div>
+      <div class="ans">謝謝你，一直在。<br>我們，只是有一種「不夠」的感覺。</div>
+    </div>
+    <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
+      <button class="b go" id="againBtn">再做一次</button>
+    </div>
+    <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s);};
+var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAmYC-E6ShBuEp4q0KA-5me3intGUYJ9mjCEJHhzJXsq/exec';
+
+// 和解四句：每句閉眼多久（秒）——可調
+var VOWS=[
+  {line:'謝謝你告訴我這些。', sub:'', sec:12},
+  {line:'我不是不好。', sub:'也可以接上你的缺點：我不是懶、我不是笨、我不是差勁……', sec:14},
+  {line:'我們，<br>只是有一種「不夠」的感覺。', sub:'', sec:14},
+  {line:'在心裡，<br>輕輕抱住它。', sub:'不用說話。', sec:20}
+];
+var THREE_GAP=9;   // 講三次：每一聲磬之間的秒數
+
+// ===== 聲音 =====
+var AC=null;
+function ac(){ try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended')AC.resume();}catch(e){} return AC; }
+function tone(f,dur,vol){ var a=ac(); if(!a)return; var t=a.currentTime,o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.value=f; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+dur); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+.05); }
+function bowl(soft){ tone(587.33,4.4,soft?.12:.22); tone(880,4.4,soft?.05:.1); }
+
+function show(id){ document.querySelectorAll('.stage').forEach(function(s){s.classList.remove('on');}); $('#'+id).classList.add('on'); window.scrollTo(0,0); }
+function esc(s){return String(s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+
+// 暗幕：閉眼的時間
+function darkOn(text,marks){
+  var d=$('#dark'); $('#dtxt').innerHTML=text||''; $('#marks').style.display=marks?'flex':'none';
+  document.querySelectorAll('#marks span').forEach(function(s){s.classList.remove('lit');});
+  d.classList.add('on'); requestAnimationFrame(function(){ d.classList.add('show'); });
+}
+function darkOff(cb){
+  var d=$('#dark'); d.classList.remove('show');
+  setTimeout(function(){ d.classList.remove('on'); if(cb)cb(); },1200);
+}
+
+// 必填：有字才出現按鈕
+function need(inputs,btn){
+  function chk(){ var ok=inputs.every(function(i){return i.value.trim();}); btn.classList.toggle('hide',!ok); }
+  inputs.forEach(function(i){ i.addEventListener('input',chk); }); chk();
+}
+
+// ===== 0 → 靜心 =====
+var medSec=45;
+$('#toMed').addEventListener('click',function(){ ac(); show('s1'); });
+$('#medOpts').addEventListener('click',function(e){
+  var o=e.target.closest('.opt'); if(!o)return;
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  o.classList.add('sel'); medSec=parseInt(o.getAttribute('data-sec'),10); $('#medCustom').value='';
+});
+$('#medCustom').addEventListener('input',function(){
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  var v=parseInt(this.value,10); if(!isNaN(v)) medSec=v;
+});
+$('#medStart').addEventListener('click',function(){
+  ac();
+  if(medSec<=0){ show('s2'); return; }
+  darkOn('往心裡，找那個聲音……');
+  setTimeout(function(){ $('#dtxt').textContent='感覺它在哪裡……'; }, medSec*500);
+  setTimeout(function(){ bowl(); $('#dtxt').textContent=''; setTimeout(function(){ darkOff(function(){ show('s2'); }); },2600); }, medSec*1000);
+});
+
+// ===== 現身、認識它 =====
+need([$('#aShape')],$('#go2'));
+$('#go2').addEventListener('click',function(){ show('s3'); });
+need([$('#aWhen'),$('#aWord')],$('#go3'));
+$('#go3').addEventListener('click',function(){
+  $('#voice').textContent='「'+$('#aWord').value.trim()+'」';
+  show('s4');
+});
+
+// ===== 讓它講三次（三聲磬）=====
+$('#go4').addEventListener('click',function(){
+  ac();
+  darkOn('請它，講第一次……',true);
+  var marks=document.querySelectorAll('#marks span');
+  var msgs=['請它，再講一次……','最後一次……',''];
+  var n=0;
+  function strike(){
+    bowl(true); marks[n].classList.add('lit');
+    $('#dtxt').textContent=msgs[n]; n++;
+    if(n<3) setTimeout(strike,THREE_GAP*1000);
+    else setTimeout(function(){ bowl(); setTimeout(function(){ darkOff(function(){ vi=0; showVow(); }); },2600); },THREE_GAP*1000);
+  }
+  setTimeout(strike,THREE_GAP*1000);
+});
+
+// ===== 和解四句 =====
+var vi=0;
+var NUM=['第 一 句','第 二 句','第 三 句','最 後'];
+function showVow(){
+  var v=VOWS[vi];
+  $('#vowNo').textContent=NUM[vi];
+  $('#vowLine').innerHTML=v.line;
+  $('#vowSub').textContent=v.sub;
+  show('s5');
+}
+$('#vowGo').addEventListener('click',function(){
+  var v=VOWS[vi];
+  darkOn('');
+  setTimeout(function(){
+    bowl();
+    setTimeout(function(){
+      darkOff(function(){
+        vi++;
+        if(vi<VOWS.length) showVow(); else { show('s6'); prefillNick(); }
+      });
+    },2400);
+  }, v.sec*1000);
+});
+
+// ===== 感想（只收這一欄）=====
+function prefillNick(){ try{ var c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(c.nick && !$('#nick').value) $('#nick').value=c.nick; }catch(e){} chkSend(); }
+function chkSend(){ var ok=$('#aFeel').value.trim() && $('#nick').value.trim(); $('#send').style.display=ok?'inline-block':'none'; $('#needMsg').style.display=ok?'none':'block'; }
+$('#aFeel').addEventListener('input',chkSend); $('#nick').addEventListener('input',chkSend);
+$('#send').addEventListener('click',function(){
+  var btn=this,msg=$('#sendMsg');
+  msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
+  fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第一堂 練習三',answers:[{q:'做完的感受',a:$('#aFeel').value.trim()}]})})
+    .then(function(r){return r.json();})
+    .then(function(res){ if(!res||!res.ok) throw new Error(); show('s7'); })
+    .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
+});
+
+// ===== 留念 =====
+$('#againBtn').addEventListener('click',function(){ location.reload(); });
+$('#dlBtn').addEventListener('click',function(){
+  function pad(n){return String(n).padStart(2,'0');}
+  var d=new Date(),st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  var L=['# 練習愛自己 · 第一堂 · 我不夠好？','','> 日期：'+st,'',
+    '## 那個聲音的樣子','',$('#aShape').value.trim(),'',
+    '## 它什麼時候醒來','',$('#aWhen').value.trim(),'',
+    '## 它的第一句話','','「'+$('#aWord').value.trim()+'」','',
+    '## 我對它說','','- 謝謝你告訴我這些。','- 我不是不好。','- 我們，只是有一種「不夠」的感覺。','- （抱住它）','',
+    '## 做完的感受','',$('#aFeel').value.trim(),''];
+  var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
+  var u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u; a.download='練習愛自己_我不夠好_'+st.replace(/-/g,'')+'.md';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(u);},1500);
+});
+})();
+</script>
+</body>
+</html>
