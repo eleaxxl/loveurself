@@ -278,7 +278,19 @@ function tone(freq,dur,vol,type,slide){
   g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+.01); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
   o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+.05);
 }
-function bowl(){ tone(587.33,4.2,.22); tone(880,4.2,.1); }
+// 磬聲：播放 assets/bowl.mp3（Elea 提供，10 秒自然淡出）；音檔未載入前以合成音代替
+var BOWL_RAW=null, BOWL_BUF=null;
+fetch('assets/bowl.mp3').then(function(r){return r.ok?r.arrayBuffer():null;}).then(function(b){BOWL_RAW=b; prepBowl();}).catch(function(){});
+function audioCtx(){ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} return AC; }
+function prepBowl(){ if(BOWL_BUF||!BOWL_RAW||!AC||prepBowl.busy) return; prepBowl.busy=true; AC.decodeAudioData(BOWL_RAW.slice(0),function(buf){BOWL_BUF=buf;},function(){prepBowl.busy=false;}); }
+// 手機要在使用者點擊時才准發聲：第一次點擊就先備好
+document.addEventListener('click',function(){ audioCtx(); prepBowl(); },true);
+function bowl(soft){
+  var a=audioCtx(); if(!a) return;
+  if(BOWL_BUF){ var s=a.createBufferSource(),g=a.createGain(); s.buffer=BOWL_BUF; g.gain.value=soft?0.55:1; s.connect(g); g.connect(a.destination); s.start(); return; }
+  [[587.33,.22],[880,.1]].forEach(function(f){ var t=a.currentTime,o=a.createOscillator(),g=a.createGain(); o.frequency.value=f[0]; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(soft?f[1]*.55:f[1],t+.02); g.gain.exponentialRampToValueAtTime(.0001,t+4.2); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+4.3); });
+}
+
 function sDing(){ tone(1046,.5,.18); setTimeout(function(){tone(1568,.6,.12);},90); }
 function sSome(){ tone(784,.35,.12); }
 function sNone(){ tone(220,.3,.12,'sine',140); }
