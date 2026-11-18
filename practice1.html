@@ -29,7 +29,20 @@ body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1
 
 /* 階段切換 */
 .stage{display:none;animation:fade .6s ease}
-.stage.on{display:block}
+.stage.on{display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 0}
+.stage header.top{padding-top:0;padding-bottom:0}
+#s3 .lead,#s4 .lead{margin:10px 0 6px}
+#s3 header.top h1{margin-bottom:4px}
+/* 並列兩欄 */
+.duo{display:flex;gap:18px;max-width:560px;margin:0 auto;flex-wrap:wrap}
+.duocol{flex:1;min-width:230px}
+.duolbl{font-family:var(--sans);font-size:12px;letter-spacing:4px;margin-bottom:8px;text-align:left;text-indent:2px}
+.flawlbl{color:var(--flaw);filter:brightness(.85)}
+.meritlbl{color:var(--teal)}
+button.b.flawbtn{background:var(--flaw);border-color:var(--flaw);color:#fff}
+/* 漸短的線 */
+.fuse{width:260px;max-width:70vw;height:2px;margin:26px auto 0;display:flex;justify-content:center}
+.fuseline{height:2px;width:100%;background:var(--teal);border-radius:2px;opacity:.7}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 header.top{text-align:center;padding:64px 0 10px}
@@ -81,7 +94,7 @@ input.line::placeholder,textarea::placeholder{color:var(--dot)}
 
 /* 貼標籤舞台 */
 .tagstage{text-align:center}
-.human-wrap{position:relative;width:260px;max-width:78vw;margin:14px auto 6px;aspect-ratio:1/1.9}
+.human-wrap{position:relative;width:min(260px,78vw,29vh);margin:14px auto 6px;aspect-ratio:1/1.9}
 .human-wrap svg{position:absolute;inset:0;width:100%;height:100%}
 .tag{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));font-family:var(--sans);font-size:12px;letter-spacing:.3px;padding:4px 9px;border-radius:7px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.14);opacity:0;animation:stick .45s cubic-bezier(.34,1.56,.64,1) forwards;pointer-events:none;max-width:120px;overflow:hidden;text-overflow:ellipsis}
 .tag.flaw{background:var(--flaw);color:var(--flaw-ink)}
@@ -158,33 +171,49 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
     <div class="center mt"><button class="b go" id="toTags">寫好了，繼續</button></div>
   </section>
 
-  <!-- 3 · 貼缺點 -->
+  <!-- 3 · 貼標籤（缺點5 → 優點5 → 並列自由填） -->
   <section class="stage" id="s3">
-    <header class="top"><div class="kicker">看 看 自 己</div><h1 style="font-size:26px">我有什麼缺點？</h1></header>
-    <p class="lead center">一個一個寫，每寫一個，貼到這個人身上。</p>
+    <header class="top"><div class="kicker" id="tagKicker">看 看 自 己</div><h1 style="font-size:26px" id="tagTitle">我有什麼缺點？</h1></header>
+    <p class="lead center" id="tagLead">一個一個寫，每寫一個，貼到這個人身上。</p>
     <div class="tagstage">
-      <div class="human-wrap" id="human3"></div>
-      <div class="counter">已貼上 <b id="c3">0</b> 個（至少 8 個）</div>
-      <div class="addbar">
-        <input class="line" id="flawIn" type="text" placeholder="我的一個缺點是……" maxlength="12">
-        <button class="b go" id="flawAdd">貼上</button>
+      <div class="human-wrap" id="human"></div>
+      <div class="counter" id="tagCounter"></div>
+
+      <!-- 單欄（前兩段） -->
+      <div class="addbar" id="singleBar">
+        <input class="line" id="oneIn" type="text" placeholder="我的一個缺點是……" maxlength="12">
+        <button class="b go" id="oneAdd">貼上</button>
       </div>
-      <div class="center mt"><button class="b ghost" id="toMerit" disabled>夠了，換個角度看 →</button></div>
+
+      <!-- 並列（第三段） -->
+      <div class="duo" id="duoBar" style="display:none">
+        <div class="duocol">
+          <div class="duolbl flawlbl">缺點</div>
+          <div class="addbar">
+            <input class="line" id="flawIn" type="text" placeholder="再寫一個缺點……" maxlength="12">
+            <button class="b go flawbtn" id="flawAdd">貼上</button>
+          </div>
+        </div>
+        <div class="duocol">
+          <div class="duolbl meritlbl">優點</div>
+          <div class="addbar">
+            <input class="line" id="meritIn" type="text" placeholder="再寫一個優點……" maxlength="12">
+            <button class="b go" id="meritAdd">貼上</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="center mt" id="fullWrap" style="display:none"><button class="b ghost" id="toLook">我貼滿了 →</button></div>
     </div>
   </section>
 
-  <!-- 4 · 貼優點 -->
+  <!-- 4 · 好好看看這個人（線條漸短） -->
   <section class="stage" id="s4">
-    <header class="top"><div class="kicker">再 看 看</div><h1 style="font-size:26px">我只有缺點嗎？</h1></header>
-    <p class="lead center">我也有一些好的地方。<br>一個一個寫，一樣貼上去。</p>
     <div class="tagstage">
-      <div class="human-wrap" id="human4"></div>
-      <div class="counter">又貼上 <b id="c4">0</b> 個（至少 8 個）</div>
-      <div class="addbar">
-        <input class="line" id="meritIn" type="text" placeholder="我的一個優點是……" maxlength="12">
-        <button class="b go" id="meritAdd">貼上</button>
-      </div>
-      <div class="center mt"><button class="b ghost" id="toBig" disabled>我貼滿了 →</button></div>
+      <p class="lead center" id="lookLead">好好看看，這個人。</p>
+      <div class="human-wrap" id="humanLook"></div>
+      <div class="fuse"><div class="fuseline" id="fuseLine"></div></div>
+      <div class="center" style="min-height:64px;margin-top:22px"><button class="b go" id="toBig" style="visibility:hidden;opacity:0;transition:opacity 1.2s">我感受到了</button></div>
     </div>
   </section>
 
@@ -297,8 +326,8 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 
   // --- 人形 SVG ---
   var HUMAN='<svg viewBox="0 0 100 190" aria-hidden="true"><g fill="none" stroke="var(--line)" stroke-width="2"><circle cx="50" cy="26" r="18" fill="var(--paper)"/><path fill="var(--paper)" d="M50 44 C34 44 28 56 27 72 L24 120 C23 128 31 130 33 122 L38 86 L38 180 C38 187 48 187 48 180 L50 128 L52 180 C52 187 62 187 62 180 L62 86 L67 122 C69 130 77 128 76 120 L73 72 C72 56 66 44 50 44 Z"/></g></svg>';
-  $('#human3').innerHTML=HUMAN;
-  $('#human4').innerHTML=HUMAN;
+  $('#human').innerHTML=HUMAN;
+  $('#humanLook').innerHTML=HUMAN;
 
   // 預先散佈的貼點（落在人形輪廓內：頭/胸/腹/雙臂/雙腿），百分比座標
   // viewBox 100x190；人形頭中心約(50,14)、軀幹約y24~60、腿約y60~95
@@ -324,31 +353,85 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
     wrap.appendChild(el);
   }
 
-  // --- 缺點 ---
-  function addFlaw(){
-    var v=$('#flawIn').value.trim(); if(!v)return;
-    data.flaws.push(v); placeTag('human3',v,'flaw'); $('#flawIn').value=''; $('#flawIn').focus();
-    $('#c3').textContent=data.flaws.length;
-    if(data.flaws.length>=8) $('#toMerit').disabled=false;
-  }
-  $('#flawAdd').addEventListener('click',addFlaw);
-  $('#flawIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addFlaw();}});
-  $('#toMerit').addEventListener('click',function(){
-    // 把缺點標籤也延續到優點舞台（同一個人身上）
-    spotIdx=0;
-    data.flaws.forEach(function(t){ placeTag('human4',t,'flaw'); });
-    show('s4'); $('#meritIn').focus();
-  });
+  // --- 貼標籤：三段 ---
+  // phase 'flaw'：先寫 5 個缺點 → phase 'merit'：再寫 5 個優點 → phase 'duo'：兩欄並列，自由寫
+  var FIRST=5, phase='flaw';
 
-  // --- 優點 ---
-  function addMerit(){
-    var v=$('#meritIn').value.trim(); if(!v)return;
-    data.merits.push(v); placeTag('human4',v,'merit'); $('#meritIn').value=''; $('#meritIn').focus();
-    $('#c4').textContent=data.merits.length;
-    if(data.merits.length>=8) $('#toBig').disabled=false;
+  // 共用：Enter 送出（中文輸入法選字中的 Enter 不算），送出後一定清空
+  function bindEnter(input, fn){
+    input.addEventListener('keydown',function(e){
+      if(e.key!=='Enter') return;
+      if(e.isComposing || e.keyCode===229) return;   // 正在選字
+      e.preventDefault(); fn();
+    });
   }
-  $('#meritAdd').addEventListener('click',addMerit);
-  $('#meritIn').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addMerit();}});
+  function take(input){
+    var v=input.value.trim();
+    input.value='';
+    input.focus();
+    return v;
+  }
+  function updCounter(){
+    if(phase==='flaw') $('#tagCounter').innerHTML='缺點 <b>'+data.flaws.length+'</b> / '+FIRST;
+    else if(phase==='merit') $('#tagCounter').innerHTML='優點 <b>'+data.merits.length+'</b> / '+FIRST;
+    else $('#tagCounter').innerHTML='缺點 <b>'+data.flaws.length+'</b>　·　優點 <b>'+data.merits.length+'</b>';
+  }
+  function addOne(){
+    var v=take($('#oneIn')); if(!v) return;
+    if(phase==='flaw'){
+      data.flaws.push(v); placeTag('human',v,'flaw');
+      if(data.flaws.length>=FIRST){
+        phase='merit';
+        $('#tagKicker').textContent='再 看 看';
+        $('#tagTitle').textContent='我只有缺點嗎？';
+        $('#tagLead').innerHTML='我也有一些好的地方。<br>一個一個寫，一樣貼上去。';
+        $('#oneIn').placeholder='我的一個優點是……';
+      }
+    } else if(phase==='merit'){
+      data.merits.push(v); placeTag('human',v,'merit');
+      if(data.merits.length>=FIRST){
+        phase='duo';
+        $('#tagKicker').textContent='繼 續 貼';
+        $('#tagTitle').textContent='還有嗎？';
+        $('#tagLead').innerHTML='缺點、優點，想到哪個就寫哪個，<br>想寫多少就寫多少。';
+        $('#singleBar').style.display='none';
+        $('#duoBar').style.display='flex';
+        $('#fullWrap').style.display='block';
+        $('#flawIn').focus();
+      }
+    }
+    updCounter();
+  }
+  function addFlaw(){ var v=take($('#flawIn')); if(!v)return; data.flaws.push(v); placeTag('human',v,'flaw'); updCounter(); }
+  function addMerit(){ var v=take($('#meritIn')); if(!v)return; data.merits.push(v); placeTag('human',v,'merit'); updCounter(); }
+
+  $('#oneAdd').addEventListener('click',addOne);      bindEnter($('#oneIn'),addOne);
+  $('#flawAdd').addEventListener('click',addFlaw);    bindEnter($('#flawIn'),addFlaw);
+  $('#meritAdd').addEventListener('click',addMerit);  bindEnter($('#meritIn'),addMerit);
+  updCounter();
+
+  // --- 好好看看這個人：線條漸短，然後「我感受到了」 ---
+  $('#toLook').addEventListener('click',function(){
+    // 把貼滿的人搬過來
+    var look=$('#humanLook');
+    look.innerHTML=HUMAN;
+    Array.prototype.forEach.call(document.querySelectorAll('#human .tag'),function(t){
+      var c=t.cloneNode(true); c.style.animation='none'; c.style.opacity='1'; look.appendChild(c);
+    });
+    show('s4');
+    var sec = medSec<=0 ? 3 : Math.max(15, medSec);
+    var line=$('#fuseLine'), btn=$('#toBig');
+    line.style.transition='none'; line.style.width='100%';
+    btn.style.visibility='hidden'; btn.style.opacity='0';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      line.style.transition='width '+sec+'s linear';
+      line.style.width='0%';
+    });});
+    setTimeout(function(){
+      bowl();
+      btn.style.visibility='visible'; btn.style.opacity='1';
+    }, sec*1000);
+  });
   $('#toBig').addEventListener('click',function(){ show('s5'); });
 
   // --- 大哉問（填答、不評價）---
