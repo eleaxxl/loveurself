@@ -36,7 +36,13 @@ body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1
 /* 並列兩欄 */
 .duo{display:flex;gap:18px;max-width:560px;margin:0 auto;flex-wrap:wrap}
 .duocol{flex:1;min-width:230px}
-.duolbl{font-family:var(--sans);font-size:12px;letter-spacing:4px;margin-bottom:8px;text-align:left;text-indent:2px}
+.duolbl{font-family:var(--hand);font-size:19px;font-weight:700;letter-spacing:2px;margin-bottom:8px;text-align:left}
+.nowlbl{font-family:var(--hand);font-size:22px;font-weight:700;letter-spacing:2px;margin:0 auto 10px;max-width:420px;text-align:left}
+.nowlbl.flaw{color:var(--flaw);filter:brightness(.85)}
+.nowlbl.merit{color:var(--teal)}
+.nowlbl .n{font-family:var(--sans);font-size:15px;font-weight:500;margin-left:10px;letter-spacing:1px;opacity:.85}
+.nowlbl.flash{animation:flash 1.4s ease}
+@keyframes flash{0%{transform:scale(1.25);opacity:.2}35%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
 .flawlbl{color:var(--flaw);filter:brightness(.85)}
 .meritlbl{color:var(--teal)}
 button.b.flawbtn{background:var(--flaw);border-color:var(--flaw);color:#fff}
@@ -180,22 +186,23 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
       <div class="counter" id="tagCounter"></div>
 
       <!-- 單欄（前兩段） -->
+      <div class="nowlbl flaw" id="nowLbl">我的 5 個缺點<span class="n" id="nowN">0 / 5</span></div>
       <div class="addbar" id="singleBar">
         <input class="line" id="oneIn" type="text" placeholder="我的一個缺點是……" maxlength="12">
-        <button class="b go" id="oneAdd">貼上</button>
+        <button class="b go flawbtn" id="oneAdd">貼上</button>
       </div>
 
       <!-- 並列（第三段） -->
       <div class="duo" id="duoBar" style="display:none">
         <div class="duocol">
-          <div class="duolbl flawlbl">缺點</div>
+          <div class="duolbl flawlbl">我的缺點</div>
           <div class="addbar">
             <input class="line" id="flawIn" type="text" placeholder="再寫一個缺點……" maxlength="12">
             <button class="b go flawbtn" id="flawAdd">貼上</button>
           </div>
         </div>
         <div class="duocol">
-          <div class="duolbl meritlbl">優點</div>
+          <div class="duolbl meritlbl">我的優點</div>
           <div class="addbar">
             <input class="line" id="meritIn" type="text" placeholder="再寫一個優點……" maxlength="12">
             <button class="b go" id="meritAdd">貼上</button>
@@ -372,8 +379,8 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
     return v;
   }
   function updCounter(){
-    if(phase==='flaw') $('#tagCounter').innerHTML='缺點 <b>'+data.flaws.length+'</b> / '+FIRST;
-    else if(phase==='merit') $('#tagCounter').innerHTML='優點 <b>'+data.merits.length+'</b> / '+FIRST;
+    if(phase==='flaw'){ $('#nowN').textContent=data.flaws.length+' / '+FIRST; $('#tagCounter').innerHTML=''; }
+    else if(phase==='merit'){ $('#nowN').textContent=data.merits.length+' / '+FIRST; $('#tagCounter').innerHTML=''; }
     else $('#tagCounter').innerHTML='缺點 <b>'+data.flaws.length+'</b>　·　優點 <b>'+data.merits.length+'</b>';
   }
   function addOne(){
@@ -386,6 +393,10 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
         $('#tagTitle').textContent='我只有缺點嗎？';
         $('#tagLead').innerHTML='我也有一些好的地方。<br>一個一個寫，一樣貼上去。';
         $('#oneIn').placeholder='我的一個優點是……';
+        $('#oneAdd').classList.remove('flawbtn');
+        var nl=$('#nowLbl'); nl.className='nowlbl merit';
+        nl.innerHTML='我的 5 個優點<span class="n" id="nowN">0 / 5</span>';
+        void nl.offsetWidth; nl.classList.add('flash');
       }
     } else if(phase==='merit'){
       data.merits.push(v); placeTag('human',v,'merit');
@@ -395,6 +406,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
         $('#tagTitle').textContent='還有嗎？';
         $('#tagLead').innerHTML='缺點、優點，想到哪個就寫哪個，<br>想寫多少就寫多少。';
         $('#singleBar').style.display='none';
+        $('#nowLbl').style.display='none';
         $('#duoBar').style.display='flex';
         $('#fullWrap').style.display='block';
         $('#flawIn').focus();
