@@ -218,10 +218,10 @@ var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAm
 // 和解四句：每句閉眼多久（秒）——可調
 var VOWS=[
   {line:'謝謝你告訴我這些。', sub:'', sec:12},
-  {line:'我不是不好。', sub:'也可以接上你的缺點：我不是懶、我不是笨、我不是差勁……', sec:14},
-  {line:'我們，<br>只是有一種「不夠」的感覺。', sub:'', sec:14},
-  {line:'在心裡，<br>輕輕抱住它。', sub:'不用說話。', sec:20},
-  {line:'<span class="whole">「謝謝你告訴我這些。」<br>「我不是不好，<br>我們，我與你，<br>只是有一種『不夠』的感覺。」<br>然後，擁抱它。</span>', sub:'四個步驟，整合起來，再做一次。', sec:35}
+  {line:'我不是不＿＿。', sub:'填上你自己的：我不是不好、我不是不聰明、我不是不努力……', sec:14},
+  {line:'我們，我和你，<br>只是有種「不夠」的感覺。', sub:'', sec:14},
+  {line:'走上前去，<br>與你的習氣擁抱。', sub:'這一句，沒有說話。', sec:20},
+  {line:'<span class="whole">「謝謝你告訴我這些。」<br>「我不是不＿＿。」<br>「我們，我和你，<br>只是有種『不夠』的感覺。」<br>然後，走上前去，與你的習氣擁抱。</span>', sub:'四句話，整合起來，再說一次。', sec:35}
 ];
 var THREE_GAP=9;   // 講三次：每一聲磬之間的秒數
 
@@ -380,7 +380,7 @@ $('#dlBtn').addEventListener('click',function(){
     '## 那個聲音的樣子','',$('#aShape').value.trim(),'',
     '## 它什麼時候醒來','',$('#aWhen').value.trim(),'',
     '## 它的第一句話','','「'+$('#aWord').value.trim()+'」','',
-    '## 我對它說','','- 謝謝你告訴我這些。','- 我不是不好。','- 我們，只是有一種「不夠」的感覺。','- （抱住它）','',
+    '## 我對它說的四句話','','- 謝謝你告訴我這些。','- 我不是不＿＿。','- 我們，我和你，只是有種「不夠」的感覺。','- （沒有說話）走上前去，與你的習氣擁抱。','',
     '## 做完的感受','',$('#aFeel').value.trim(),''];
   var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
   var u=URL.createObjectURL(blob),a=document.createElement('a');
