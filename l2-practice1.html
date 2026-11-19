@@ -334,7 +334,7 @@ function toMoment(){
 }
 function chkMoment(){ $('#toTheater').disabled=!$('#moment').value.trim(); }
 $('#moment').addEventListener('input',chkMoment);
-$('#toTheater').addEventListener('click',function(){ data.moment=$('#moment').value.trim(); $('#momentCap').textContent='「'+data.moment+'」'; buildSeats(); show('s3'); setTimeout(function(){ $('#whoIn').focus(); },400); });
+$('#toTheater').addEventListener('click',function(){ data.moment=$('#moment').value.trim(); try{localStorage.setItem('aixue_l2_moment',data.moment);}catch(e){} $('#momentCap').textContent='「'+data.moment+'」'; buildSeats(); show('s3'); setTimeout(function(){ $('#whoIn').focus(); },400); });
 
 // ---- 劇場 ----
 var PERSON='<svg class="who" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="13" r="9" fill="#8FA9A6"/><path d="M22 24c-11 0-17 6-17 15v5h34v-5c0-9-6-15-17-15z" fill="#8FA9A6"/></svg>';
