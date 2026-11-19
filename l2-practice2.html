@@ -295,14 +295,13 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 var $=function(s){return document.querySelector(s);};
 var ENDPOINT='https://script.google.com/macros/s/AKfycbwR3tw7oG54pWdmZtWVjt24iAmYC-E6ShBuEp4q0KA-5me3intGUYJ9mjCEJHhzJXsq/exec';
 
-// 卡片：s＝安全　b＝愛與歸屬　e＝尊重　o＝外在的東西（學員看不到分類，最後才揭曉）
+// 卡片：s＝安全感　b＝愛與歸屬　o＝外在的東西（尊重不放：那是另一個議題）（學員看不到分類，最後才揭曉）
 var POOL=[
- ['沒事，你很安全。','s'],['沒有人會因為這樣離開你。','s'],['出錯也沒關係，我在。','s'],['慢慢來，不會怎樣的。','s'],['這不會影響你的位置。','s'],['你不用怕。','s'],['我不會說出去的。','s'],['明天一切照舊。','s'],
+ ['沒事，你很安全。','s'],['沒有人會因為這樣離開你。','s'],['出錯也沒關係，我在。','s'],['慢慢來，不會怎樣的。','s'],['這不會影響你的位置。','s'],['你不用怕。','s'],['我不會說出去的。','s'],['明天一切照舊。','s'],['有人幫你圓場。','s'],['沒有人在笑你。','s'],['這件事，過了就過了。','s'],['你可以先休息一下。','s'],
  ['你還是我們的一份子。','b'],['下次聚會，一樣要找你。','b'],['大家都有過這種時候。','b'],['你不是一個人。','b'],['我還是愛你。','b'],['不管怎樣，我都在你這邊。','b'],['你這樣，我也喜歡。','b'],['有人輕輕抱了你一下。','b'],['你對我很重要。','b'],['群組裡有人說：「等你喔。」','b'],['你可以留下來。','b'],['有人走過來，坐在你旁邊。','b'],
- ['你其實很厲害。','e'],['你做得比大家都好。','e'],['主管當眾稱讚你。','e'],['你是專業的。','e'],['你拿到了第一名。','e'],['你升職了。','e'],['大家都在學你。','e'],
  ['一筆獎金','o'],['一百個讚','o'],['一件新衣服','o'],['一頓大餐','o'],['一台新手機','o'],['休一天假','o'],['一張出國機票','o']
 ];
-var CATS={s:['安全','#6F9E9A'],b:['愛與歸屬','#2F6F73'],e:['尊重、肯定','#D9A441'],o:['外在的東西','#B9A79A']};
+var CATS={s:['安全感','#6F9E9A'],b:['愛與歸屬','#2F6F73'],o:['外在的東西','#B9A79A']};
 var SHOW=6, MINPICK=5;
 var temp=100, deck=[], hand=[], picks=[]; var moment='';
 
@@ -359,8 +358,8 @@ $('#fearGo').addEventListener('click',function(){
 
 // ---- 降溫：卡片山丘 ----
 function buildMound(){
-  // 由下往上一層層疊：10, 9, 7, 5, 3 張，合計 34
-  var rows=[10,9,7,5,3], h='', k=0, m=$('#mound');
+  // 由下往上一層層疊：9, 8, 7, 5, 2 張，合計 31
+  var rows=[9,8,7,5,2], h='', k=0, m=$('#mound');
   var W=m.clientWidth||300, cw=(W<400?36:46), ch=(W<400?50:64), H=m.clientHeight||200;
   rows.forEach(function(n,r){
     var span=W*(0.92-r*0.16), x0=(W-span)/2, step=n>1?(span-cw)/(n-1):0;
@@ -402,11 +401,11 @@ $('#enough').addEventListener('click',reveal);
 
 // ---- 揭曉 ----
 function reveal(){
-  var sum={s:0,b:0,e:0,o:0}, total=0;
+  var sum={s:0,b:0,o:0}, total=0;
   picks.forEach(function(p){ sum[p.k]+=p.v; total+=p.v; });
   $('#list2').innerHTML=picks.filter(function(p){return p.v>0;}).sort(function(a,b){return b.v-a.v;}).map(function(p){return '・'+esc(p.t)+'　<span style="font-family:var(--sans);font-size:12px">（'+esc(p.label)+'）</span>';}).join('<br>') || '・（每一張都沒讓你降溫——這也是一個發現。）';
-  var max=Math.max(1,sum.s,sum.b,sum.e,sum.o);
-  $('#bars').innerHTML=['s','b','e','o'].map(function(k){ return '<div class="bar"><div class="bl"><span>'+CATS[k][0]+'</span><span>降了 '+sum[k]+'°</span></div><div class="track"><div class="val" data-w="'+(sum[k]/max*100)+'" style="background:'+CATS[k][1]+'"></div></div></div>'; }).join('');
+  var max=Math.max(1,sum.s,sum.b,sum.o);
+  $('#bars').innerHTML=['s','b','o'].map(function(k){ return '<div class="bar"><div class="bl"><span>'+CATS[k][0]+'</span><span>降了 '+sum[k]+'°</span></div><div class="track"><div class="val" data-w="'+(sum[k]/max*100)+'" style="background:'+CATS[k][1]+'"></div></div></div>'; }).join('');
   show('s4');
   setTimeout(function(){ document.querySelectorAll('#bars .val').forEach(function(v){ v.style.width=v.getAttribute('data-w')+'%'; }); },500);
   var sec = medSec<=0 ? 3 : medSec, line=$('#fuseLine'), btn=$('#toLack');
