@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>練習愛自己｜不好意思</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1EF;--paper:#FBFCFB;--ink:#22303A;--ink-soft:#5B6A72;
+  --teal:#2F6F73;--teal-deep:#22555A;--light:#D9A441;--line:#D3DDDA;--dot:#C5D3D0;--on-teal:#FFFFFF;
+  --hand:"LXGW WenKai TC","Kaiti TC","DFKai-SB","BiauKai",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  box-sizing:border-box;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#172126;--paper:#1F2B31;--ink:#E6EEEC;--ink-soft:#A7B6B9;
+  --teal:#6FB3B3;--teal-deep:#95CBC9;--light:#E2B866;--line:#33444B;--dot:#34474E;--on-teal:#172126;
+  color-scheme:dark;
+}}
+*{box-sizing:inherit}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--hand);line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100%}
+.wrap{max-width:620px;margin:0 auto;padding:0 24px 120px}
+header.top{text-align:center;padding:72px 0 16px}
+header.top .kicker{font-family:var(--sans);font-size:13px;letter-spacing:7px;color:var(--teal);margin-bottom:20px;text-indent:7px}
+header.top h1{font-size:36px;font-weight:700;letter-spacing:5px;margin:0 0 14px;color:var(--teal-deep)}
+header.top .sub{font-size:15px;color:var(--ink-soft);letter-spacing:1.5px;font-family:var(--sans);line-height:1.9}
+hr.rule{border:none;border-top:1px solid var(--line);max-width:110px;margin:30px auto}
+
+.intro{font-size:16px;color:var(--ink-soft);line-height:2;letter-spacing:.5px;margin:22px 0 10px}
+.intro strong{color:var(--ink);font-weight:700}
+
+/* 身分列 */
+.me{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px 20px 18px;margin:18px 0 8px}
+.me .row{display:flex;gap:12px;flex-wrap:wrap}
+.me .fld{flex:1;min-width:130px}
+.lbl{font-family:var(--sans);font-size:12px;letter-spacing:1.5px;color:var(--ink-soft);display:block;margin-bottom:6px;text-indent:1px}
+.lbl .must{color:var(--light);filter:brightness(.9)}
+input,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;font-family:var(--hand);font-size:16px;color:var(--ink);line-height:1.8;letter-spacing:.5px;padding:12px 14px;outline:none;transition:border-color .2s,background .2s}
+textarea{resize:vertical;min-height:80px;line-height:1.9}
+input:focus,textarea:focus{border-color:var(--teal);background:var(--paper)}
+input::placeholder,textarea::placeholder{color:var(--dot)}
+.me .hint{font-family:var(--sans);font-size:12px;color:var(--ink-soft);opacity:.8;letter-spacing:.4px;margin-top:8px;line-height:1.7}
+
+.sec{font-family:var(--sans);font-size:13px;letter-spacing:.4em;color:var(--teal);text-indent:.4em;display:flex;align-items:center;gap:16px;margin:42px 2px 16px}
+.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* 新增一筆 */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 22px 20px;margin-bottom:14px}
+.card .fld{margin-bottom:14px}
+.card .fld:last-child{margin-bottom:0}
+.ask{font-size:16px;letter-spacing:.5px;margin-bottom:6px;line-height:1.7}
+.ask .must{color:var(--light);filter:brightness(.9);font-family:var(--sans);font-size:12px;margin-left:6px;letter-spacing:1px}
+.keyq textarea{min-height:66px;font-size:17px}
+.btnrow{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+button.b{font-family:var(--sans);font-size:15px;letter-spacing:.18em;border-radius:999px;padding:12px 28px;cursor:pointer;text-indent:.18em;transition:opacity .2s,background .2s;border:1px solid var(--teal)}
+button.send{color:var(--on-teal);background:var(--teal)}
+button.send:hover{opacity:.88}
+button.send:disabled{opacity:.5;cursor:default}
+button.ghost{color:var(--teal);background:transparent}
+button.ghost:hover{background:var(--bg)}
+.msg{font-family:var(--sans);font-size:13px;letter-spacing:.4px;margin-top:10px;min-height:1.2em;line-height:1.6}
+.msg.ok{color:var(--teal)}
+.msg.err{color:#b4524a}
+
+/* 已記下的清單 */
+.count{font-family:var(--sans);font-size:13px;color:var(--ink-soft);letter-spacing:.5px;margin:0 2px 14px}
+.item{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--light);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.item .q{font-size:16px;letter-spacing:.5px;line-height:1.7;color:var(--ink);margin-bottom:8px}
+.item .meta{font-family:var(--sans);font-size:12px;color:var(--ink-soft);opacity:.85;letter-spacing:.4px;line-height:1.7}
+.item .meta .sync{color:var(--teal);opacity:1}
+.item .meta .local{color:var(--ink-soft)}
+.item .del{float:right;font-family:var(--sans);font-size:12px;color:var(--ink-soft);opacity:.6;background:none;border:none;cursor:pointer;padding:2px 6px;letter-spacing:1px}
+.item .del:hover{opacity:1;color:#b4524a}
+.empty{font-family:var(--sans);font-size:14px;color:var(--ink-soft);opacity:.7;letter-spacing:.5px;text-align:center;padding:24px 0;line-height:1.9}
+
+/* 底部工具列 */
+.tools{margin-top:40px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px}
+.tools .tsec{font-family:var(--sans);font-size:12px;letter-spacing:3px;color:var(--teal);margin-bottom:14px;text-indent:3px}
+.tools .trow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tools button{flex:1;min-width:140px}
+.tools details{margin-top:8px;border-top:1px solid var(--line);padding-top:14px}
+.tools summary{font-family:var(--sans);font-size:13px;color:var(--teal);letter-spacing:.5px;cursor:pointer;list-style:none}
+.tools summary::-webkit-details-marker{display:none}
+.tools summary::before{content:"＋ ";color:var(--teal)}
+.tools details[open] summary::before{content:"－ "}
+.tools .pull{margin-top:14px}
+.tools .pull .row{display:flex;gap:10px;flex-wrap:wrap}
+.tools .pull .fld{flex:1;min-width:120px}
+.tools .savehint{font-family:var(--sans);font-size:12px;color:var(--ink-soft);opacity:.8;letter-spacing:.4px;margin-top:10px;line-height:1.7}
+
+footer{text-align:center;padding-top:50px;color:var(--ink-soft);opacity:.7;font-family:var(--sans);font-size:13px;letter-spacing:3px;text-indent:3px}
+
+@media(max-width:560px){.wrap{padding:0 20px 110px}header.top{padding:52px 0 14px}header.top h1{font-size:29px;letter-spacing:4px}}
+.tally{font-family:var(--hand);font-size:22px;color:var(--teal-deep);letter-spacing:2px}
+.tally b{font-size:30px;color:var(--teal);margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">練 習 愛 自 己　·　自 我 紀 錄</div>
+    <h1>不好意思</h1>
+    <div class="sub">這一週，數一數<br>自己說了幾次「不好意思」</div>
+  </header>
+
+  <hr class="rule">
+
+  <div class="intro">
+    <p>這一週，留意一句很常見的話：<strong>「不好意思」</strong>。</p>
+    <p>每說一次——說出口的，或只在心裡說的——就回到這裡記下來：當時在哪裡、在做什麼。不用分析為什麼，記下那個情境就好。</p>
+    <p>一週之後，看看自己說了幾次。</p>
+  </div>
+
+  <!-- 身分 -->
+  <div class="me">
+    <div class="row">
+      <div class="fld">
+        <label class="lbl" for="nick">你的暱稱 <span class="must">必填</span></label>
+        <input id="nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
+      </div>
+      <div class="fld">
+        <label class="lbl" for="code">回溯碼（4 位數字）</label>
+        <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="自己設，換裝置撈回用" autocomplete="off">
+      </div>
+    </div>
+    <div class="hint">暱稱會跟著你的每一筆紀錄。回溯碼是選填——設了它，以後換手機或電腦，用「暱稱＋回溯碼」就能把紀錄撈回來。</div>
+  </div>
+
+  <!-- 新增一筆 -->
+  <div class="sec">又 說 了 一 次</div>
+  <div class="card" id="entryCard">
+    <div class="fld keyq">
+      <div class="ask">當下的情境——<span class="must">必填</span></div>
+      <textarea id="eKey" placeholder="在哪裡、在做什麼？例如：電梯裡，讓別人先出去的時候。"></textarea>
+    </div>
+    <div class="fld">
+      <div class="ask">對誰說的</div>
+      <textarea id="eStory" placeholder="（選填）同事、店員、家人、陌生人……" style="min-height:56px"></textarea>
+    </div>
+    <div class="fld">
+      <div class="ask">日期</div>
+      <input id="eDate" type="date">
+    </div>
+    <div class="btnrow">
+      <button class="b ghost" id="clearBtn" type="button">清空</button>
+      <button class="b send" id="addBtn" type="button">記下這一次</button>
+    </div>
+    <div class="msg" id="addMsg"></div>
+  </div>
+
+  <!-- 已記下 -->
+  <div class="sec">這 一 週 · 我 說 了</div>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+
+  <!-- 工具列 -->
+  <div class="tools">
+    <div class="tsec">帶 走 與 撈 回</div>
+    <div class="trow">
+      <button class="b ghost" id="dlBtn" type="button">下載我的紀錄（.md）</button>
+    </div>
+    <div class="savehint">你記下的內容會自動留在這個裝置的瀏覽器裡，整週回來都在。下載只給你自己。</div>
+
+    <details>
+      <summary>換了手機或電腦？從雲端撈回我的紀錄</summary>
+      <div class="pull">
+        <div class="row">
+          <div class="fld">
+            <label class="lbl" for="pNick">暱稱</label>
+            <input id="pNick" type="text" placeholder="當時用的暱稱" autocomplete="off">
+          </div>
+          <div class="fld">
+            <label class="lbl" for="pCode">回溯碼</label>
+            <input id="pCode" type="text" inputmode="numeric" maxlength="4" placeholder="4 位數字" autocomplete="off">
+          </div>
+        </div>
+        <div class="btnrow" style="margin-top:12px">
+          <button class="b send" id="pullBtn" type="button">撈回我的紀錄</button>
+        </div>
+        <div class="msg" id="pullMsg"></div>
+        <div class="savehint">只有「暱稱＋回溯碼」都對，才撈得回你自己的紀錄。撈回來的會併進這個裝置，不會蓋掉你已經寫的。</div>
+      </div>
+    </details>
+  </div>
+
+  <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  // 後端網址：部署 Apps Script 後填入這裡；留空＝只在本機存（送出仍會成功、只是不上傳雲端）
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxYuj4OabVKX_khloa5yf0_4Hah2N_4pHGDqc6LYwspqueU3jIRbB10_Je_UhFKwgHS6g/exec';
+
+  var KEY = 'aixue_sorry_v1';
+  var $ = function(s){return document.querySelector(s);};
+  var nick=$('#nick'), code=$('#code');
+  var eKey=$('#eKey'), eStory=$('#eStory'), eDate=$('#eDate');
+  var addBtn=$('#addBtn'), clearBtn=$('#clearBtn'), addMsg=$('#addMsg');
+  var listEl=$('#list'), countEl=$('#count');
+
+  // ---- 本機儲存 ----
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){return {};} }
+  function save(st){ try{localStorage.setItem(KEY, JSON.stringify(st));}catch(e){} }
+  var state = load();
+  if(!state.items) state.items = [];
+  // 暱稱、回溯碼：沒填過就沿用「不舒服的一刻」那頁的
+  try{ var _c=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(!state.nick&&_c.nick) state.nick=_c.nick; if(!state.code&&_c.code) state.code=_c.code; }catch(e){}
+  if(state.nick) nick.value = state.nick;
+  if(state.code) code.value = state.code;
+
+  function persistMe(){ state.nick = nick.value.trim(); state.code = code.value.trim(); save(state); }
+  nick.addEventListener('input', persistMe);
+  code.addEventListener('input', function(){ this.value=this.value.replace(/\D/g,'').slice(0,4); persistMe(); });
+
+  function pad(n){return String(n).padStart(2,'0');}
+  function today(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+  // ---- 畫出清單 ----
+  function esc(s){ return (s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function render(){
+    var items = state.items.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0);});
+    countEl.innerHTML = items.length ? ('<span class="tally">「不好意思」<b>× '+items.length+'</b></span>') : '';
+    if(!items.length){ listEl.innerHTML = '<div class="empty">還沒有紀錄。<br>遇到不舒服的那一刻，回到這裡記下它。</div>'; return; }
+    listEl.innerHTML = items.map(function(it){
+      var meta = [];
+      if(it.date) meta.push(esc(it.date));
+      if(it.story) meta.push('對 '+esc(it.story));
+      var sync = it.synced ? '<span class="sync">· 已送出</span>' : '<span class="local">· 僅存本機</span>';
+      return '<div class="item" data-id="'+it.id+'">'
+        +'<button class="del" data-del="'+it.id+'" title="刪除">刪除</button>'
+        +'<div class="q">'+esc(it.key)+'</div>'
+        +'<div class="meta">'+(meta.join('　·　'))+(meta.length?' ':'')+sync+'</div>'
+        +'</div>';
+    }).join('');
+    Array.prototype.forEach.call(listEl.querySelectorAll('[data-del]'), function(btn){
+      btn.addEventListener('click', function(){
+        var id=btn.getAttribute('data-del');
+        state.items = state.items.filter(function(x){return x.id!==id;});
+        save(state); render();
+      });
+    });
+  }
+
+  // ---- 送出一筆 ----
+  function sendToCloud(item, cb){
+    if(!ENDPOINT){ cb(false); return; } // 尚未接後端
+    fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'add', sheet:'不好意思', headers:['日期','當下情境','對誰說'], nick:state.nick, code:state.code, item:item})})
+      .then(function(r){return r.json();})
+      .then(function(res){ cb(!!(res&&res.ok)); })
+      .catch(function(){ cb(false); });
+  }
+
+  addBtn.addEventListener('click', function(){
+    persistMe();
+    var keyv = eKey.value.trim();
+    if(!state.nick){ addMsg.className='msg err'; addMsg.textContent='先在上面填一個暱稱。'; nick.focus(); return; }
+    if(!keyv){ addMsg.className='msg err'; addMsg.textContent='寫一下當下的情境就好。'; eKey.focus(); return; }
+    var item = { id:uid(), ts:Date.now(), key:keyv,
+                 story:eStory.value.trim(), date:(eDate.value||today()), synced:false };
+    state.items.push(item); save(state); render();
+    addMsg.className='msg'; addMsg.textContent='送出中……'; addBtn.disabled=true;
+    sendToCloud(item, function(ok){
+      if(ok){ item.synced=true; save(state); render(); addMsg.className='msg ok'; addMsg.textContent='記下了，也送出了。'; }
+      else { addMsg.className='msg ok'; addMsg.textContent = ENDPOINT ? '已存在這個裝置（雲端暫時沒送成，稍後可再試）。' : '記下了。'; }
+      addBtn.disabled=false;
+      eKey.value=''; eStory.value=''; eDate.value='';
+      setTimeout(function(){ addMsg.textContent=''; addMsg.className='msg'; }, 3200);
+    });
+  });
+
+  clearBtn.addEventListener('click', function(){ eKey.value=''; eStory.value=''; eDate.value=''; addMsg.textContent=''; eKey.focus(); });
+
+  // ---- 下載 .md ----
+  $('#dlBtn').addEventListener('click', function(){
+    var items = state.items.slice().sort(function(a,b){return (a.ts||0)-(b.ts||0);});
+    var L=[];
+    L.push('# 練習愛自己 · 不好意思 — 我這一週的紀錄');
+    L.push('');
+    L.push('> 暱稱：'+(state.nick||'（未填）'));
+    L.push('> 下載日期：'+today());
+    L.push('> 這一週說了 '+items.length+' 次「不好意思」');
+    L.push('');
+    items.forEach(function(it,i){
+      L.push('## '+(i+1)+'. '+it.key);
+      L.push('');
+      if(it.date) L.push('- 日期：'+it.date);
+      if(it.story) L.push('- 對誰說：'+it.story);
+      L.push('');
+    });
+    var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
+    var u=URL.createObjectURL(blob); var a=document.createElement('a');
+    a.href=u; a.download='練習愛自己_不好意思_'+(state.nick||'我')+'_'+today().replace(/-/g,'')+'.md';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(u);},1500);
+  });
+
+  // ---- 跨裝置撈回 ----
+  $('#pullBtn').addEventListener('click', function(){
+    var pm=$('#pullMsg'); var n=$('#pNick').value.trim(); var c=$('#pCode').value.trim();
+    if(!n||!c){ pm.className='msg err'; pm.textContent='暱稱和回溯碼都要填。'; return; }
+    if(!ENDPOINT){ pm.className='msg err'; pm.textContent='（雲端撈回要等後端接上後才能用。）'; return; }
+    pm.className='msg'; pm.textContent='撈取中……';
+    fetch(ENDPOINT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'pull', sheet:'不好意思', nick:n, code:c})})
+      .then(function(r){return r.json();})
+      .then(function(res){
+        if(!res||!res.ok){ throw new Error(); }
+        var got = res.items||[];
+        var have = {}; state.items.forEach(function(x){ have[x.key+'|'+(x.date||'')]=true; });
+        var added=0;
+        got.forEach(function(g){
+          var k=(g.key||'')+'|'+(g.date||'');
+          if(!have[k]){ state.items.push({id:uid(),ts:g.ts||Date.now(),key:g.key,story:g.story||'',date:g.date||'',synced:true}); added++; }
+        });
+        if(!state.nick){ state.nick=n; nick.value=n; } if(!state.code){ state.code=c; code.value=c; }
+        save(state); render();
+        pm.className='msg ok'; pm.textContent='撈回 '+got.length+' 筆，新增 '+added+' 筆到這個裝置。';
+      })
+      .catch(function(){ pm.className='msg err'; pm.textContent='撈不到，確認暱稱和回溯碼是否正確。'; });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
