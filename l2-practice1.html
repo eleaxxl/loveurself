@@ -383,6 +383,7 @@ $('#thinkAdd').addEventListener('click',addThink); bindEnter($('#thinkIn'),addTh
 
 // ---- 看一看：燈暗、線條漸短 ----
 function toLook(){
+  try{ localStorage.setItem('aixue_l2_people',JSON.stringify(data.people)); }catch(e){}
   document.querySelectorAll('.seat').forEach(function(s){s.classList.remove('focus');});
   $('#pThink').style.display='none'; $('#pLook').style.display='block';
   $('#theater').classList.add('dim');
