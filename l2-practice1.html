@@ -173,7 +173,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
       <div class="sub">一個關於「被看見」的小練習</div>
     </header>
     <hr class="rule">
-    <p class="lead center">想一個讓你好想躲起來的時刻。<br>我們去看看，那時候，台下坐著誰。</p>
+    <p class="lead center">想一個讓你好想躲起來的時刻。</p>
     <div class="center mt"><button class="b go" id="toMed">開始</button></div>
   </section>
 
@@ -189,7 +189,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
           <div class="opt" data-sec="90">90 秒</div>
         </div>
         <div class="custom"><input id="medCustom" type="text" inputmode="numeric" placeholder="自訂秒數"></div>
-        <p class="hint" style="margin-top:18px">閉上眼，想起這一週，<br>某個讓你臉一熱、好希望沒人看到的時刻。<br>不用分析，讓那個畫面回來。<br>感覺一下：臉、胸口、肩膀，哪裡在發緊。<br>聽見磬聲，再張開眼。</p>
+        <p class="hint" style="margin-top:18px">閉上眼，想起<br>某個讓你臉一熱、好希望沒人看到的時刻。<br>不用分析，讓那個畫面回來。<br>感覺一下：臉、胸口、肩膀，哪裡在發緊。<br>聽見磬聲，再張開眼。</p>
         <div class="center mt"><button class="b go" id="medStart">靜心開始</button></div>
       </div>
       <div id="medRun" style="display:none">
@@ -242,7 +242,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 
     <!-- 3c 看一看 -->
     <div class="panel center" id="pLook" style="display:none">
-      <p class="lead center" style="margin-top:6px">燈暗下來了。<br>好好看看，台下的每一個人，和他們心裡的話。</p>
+      <p class="lead center" style="margin-top:6px">燈暗下來了。<br>好好看看，台下的每一個人，讓他們的臉浮上心頭。<br>想像他們跟你說這些話。</p>
       <div class="fuse"><div class="fuseline" id="fuseLine"></div></div>
       <div style="min-height:64px;margin-top:22px"><button class="b go" id="toQ" style="visibility:hidden;opacity:0;transition:opacity 1.2s">我看見了</button></div>
     </div>
@@ -251,6 +251,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <!-- 4 一個問題 -->
   <section class="stage" id="s4">
     <div class="bigq2">這些話，<br>是他說的，<br>還是你替他說的？</div>
+    <div class="fuse"><div class="fuseline" id="fuseLine2"></div></div>
     <div class="reveal" id="qBottom">
       <div style="max-width:420px;margin:40px auto 0;text-align:left">
         <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
@@ -265,7 +266,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s5">
     <div class="keep">
       <div class="kk">帶 走 一 句</div>
-      <div class="ans">台下的位子，<br>是誰安排的？</div>
+      <div class="ans">沒有人在看你。<br>每個人看見的，都是「自己」。</div>
     </div>
     <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
@@ -386,7 +387,7 @@ function toLook(){
   $('#pThink').style.display='none'; $('#pLook').style.display='block';
   $('#theater').classList.add('dim');
   $('#theater').scrollIntoView({behavior:'smooth',block:'start'});
-  var sec = medSec<=0 ? 3 : Math.max(15, medSec);
+  var sec = medSec<=0 ? 3 : medSec*2;
   var line=$('#fuseLine'), btn=$('#toQ');
   line.style.transition='none'; line.style.width='100%';
   requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.transition='width '+sec+'s linear'; line.style.width='0%'; }); });
@@ -396,7 +397,10 @@ function toLook(){
 // ---- 一個問題（不作答）----
 $('#toQ').addEventListener('click',function(){
   show('s4');
-  setTimeout(function(){ $('#qBottom').classList.add('on'); chkSend(); }, 6000);
+  var sec = medSec<=0 ? 3 : medSec*2, line=$('#fuseLine2');
+  line.style.transition='none'; line.style.width='100%';
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.transition='width '+sec+'s linear'; line.style.width='0%'; }); });
+  setTimeout(function(){ bowl(); $('#qBottom').classList.add('on'); chkSend(); }, sec*1000);
 });
 function chkSend(){ var ok=!!$('#nick').value.trim(); $('#send').style.display=ok?'inline-block':'none'; }
 $('#nick').addEventListener('input',chkSend);
