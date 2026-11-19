@@ -228,6 +228,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 
   <!-- 2b 害怕的是什麼 -->
   <section class="stage" id="s2b">
+    <p class="lead center" id="againHint" style="display:none">好像，還沒碰到那個害怕。<br>閉上眼，再回到那一刻，慢慢感受一下。</p>
     <div class="bigq2" style="font-size:24px;font-weight:700;color:var(--teal-deep);letter-spacing:2px;line-height:1.8;text-align:center">在那個羞愧的時刻，<br>你害怕的是什麼？</div>
     <textarea id="fear" placeholder="寫下來……" style="min-height:90px;margin-top:20px"></textarea>
     <div class="center mt"><button class="b go" id="fearGo" disabled>送出</button></div>
@@ -247,8 +248,18 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
         <div class="reveal2" id="reveal2"><div class="rhint">從下面的卡片堆裡，隨手抽一張。</div></div>
         <div class="mound" id="mound"></div>
         <div class="left2" id="left2"></div>
-        <div class="enough"><button class="b ghost" id="enough" style="display:none">就到這裡 →</button></div>
       </div>
+    </div>
+  </section>
+
+  <!-- 3b 外在的東西代表什麼 -->
+  <section class="stage" id="s3b">
+    <div class="bigq2" style="font-size:24px;font-weight:700;color:var(--teal-deep);letter-spacing:2px;line-height:1.8;text-align:center">讓你降溫最多的，<br>是那些外在的東西。</div>
+    <p class="lead center" id="oList"></p>
+    <p class="lead center" style="margin-top:10px"><b>它們，代表了什麼？</b></p>
+    <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="b go" data-to="s">安全感</button>
+      <button class="b go" data-to="b">愛與歸屬</button>
     </div>
   </section>
 
@@ -256,6 +267,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s4">
     <header class="top"><div class="kicker">看 一 看</div><h1 style="font-size:26px">讓你降溫的，是這些</h1></header>
     <div class="list2" id="list2"></div>
+    <p class="hint center" id="oNote" style="display:none;margin-top:14px"></p>
     <div class="bars" id="bars"></div>
     <div class="fuse" style="margin-top:30px"><div class="fuseline" id="fuseLine"></div></div>
     <div class="center" style="min-height:64px;margin-top:22px"><button class="b go" id="toLack" style="visibility:hidden;opacity:0;transition:opacity 1.2s">繼續</button></div>
@@ -278,7 +290,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s6">
     <div class="keep">
       <div class="kk">帶 走 一 句</div>
-      <div class="ans">讓我好過一點的，<br>不是更好，<br>是有人說：「你可以留下來。」</div>
+      <div class="ans">我們真正缺的是<br>「無條件的接納」</div>
     </div>
     <div class="center mt" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <button class="b ghost" id="dlBtn">下載這次的紀錄（.md）</button>
@@ -353,6 +365,7 @@ $('#toGame').addEventListener('click',function(){ moment=$('#moment').value.trim
 $('#fear').addEventListener('input',function(){ $('#fearGo').disabled=!this.value.trim(); });
 $('#fearGo').addEventListener('click',function(){
   fear=$('#fear').value.trim();
+  picks=[]; waiting=false; $('#mound').classList.remove('wait');
   deck=shuffle(POOL); buildMound(); setTemp(100); show('s3');
 });
 
@@ -378,6 +391,22 @@ function setTemp(t){
   $('#tnum').textContent=temp+'°';
 }
 var cur=null, waiting=false;
+function feelAgain(){
+  picks=[]; $('#againHint').style.display='block';
+  $('#reveal2').innerHTML='<div class="rhint">從下面的卡片堆裡，隨手抽一張。</div>';
+  show('s2b'); setTimeout(function(){ $('#fear').focus(); },400);
+}
+// 統計前：外在的東西若比安全感、愛與歸屬都多，先問它代表什麼
+var oTo=null;
+function sums(){ var x={s:0,b:0,o:0}; picks.forEach(function(p){ x[p.k]+=p.v; }); return x; }
+function finish(){
+  var x=sums();
+  if(x.o>x.s && x.o>x.b){
+    $('#oList').innerHTML=picks.filter(function(p){return p.k==='o'&&p.v>0;}).map(function(p){return esc(p.t);}).join('、');
+    show('s3b');
+  } else reveal();
+}
+document.querySelectorAll('#s3b [data-to]').forEach(function(b){ b.addEventListener('click',function(){ oTo=b.getAttribute('data-to'); reveal(); }); });
 $('#mound').addEventListener('click',function(e){
   var c=e.target.closest('.mc'); if(!c||waiting||temp<=0) return;
   waiting=true; $('#mound').classList.add('wait');
@@ -394,18 +423,18 @@ $('#reveal2').addEventListener('click',function(e){
   var left=updLeft();
   $('#reveal2').innerHTML='<div class="rhint">'+(temp>0?'再抽一張。':'溫度，降下來了。')+'</div>';
   waiting=false; $('#mound').classList.remove('wait');
-  if(picks.length>=12 && temp>0) $('#enough').style.display='inline-block';
-  if(temp<=0 || left===0){ waiting=true; setTimeout(reveal,1600); }
+  var cooled=picks.some(function(p){return p.v>0;});
+  if(!cooled && picks.length>=20){ waiting=true; setTimeout(feelAgain,1400); return; }
+  if(temp<=0 || left===0){ waiting=true; setTimeout(finish,1600); }
 });
-$('#enough').addEventListener('click',reveal);
 
 // ---- 揭曉 ----
 function reveal(){
-  var sum={s:0,b:0,o:0}, total=0;
-  picks.forEach(function(p){ sum[p.k]+=p.v; total+=p.v; });
+  var sum=sums();
+  if(oTo){ sum[oTo]+=sum.o; sum.o=0; $('#oNote').style.display='block'; $('#oNote').textContent='外在的東西，你說它代表「'+CATS[oTo][0]+'」，已經算進去了。'; }
   $('#list2').innerHTML=picks.filter(function(p){return p.v>0;}).sort(function(a,b){return b.v-a.v;}).map(function(p){return '・'+esc(p.t)+'　<span style="font-family:var(--sans);font-size:12px">（'+esc(p.label)+'）</span>';}).join('<br>') || '・（每一張都沒讓你降溫——這也是一個發現。）';
   var max=Math.max(1,sum.s,sum.b,sum.o);
-  $('#bars').innerHTML=['s','b','o'].map(function(k){ return '<div class="bar"><div class="bl"><span>'+CATS[k][0]+'</span><span>降了 '+sum[k]+'°</span></div><div class="track"><div class="val" data-w="'+(sum[k]/max*100)+'" style="background:'+CATS[k][1]+'"></div></div></div>'; }).join('');
+  $('#bars').innerHTML=(oTo?['s','b']:['s','b','o']).map(function(k){ return '<div class="bar"><div class="bl"><span>'+CATS[k][0]+'</span><span>降了 '+sum[k]+'°</span></div><div class="track"><div class="val" data-w="'+(sum[k]/max*100)+'" style="background:'+CATS[k][1]+'"></div></div></div>'; }).join('');
   show('s4');
   setTimeout(function(){ document.querySelectorAll('#bars .val').forEach(function(v){ v.style.width=v.getAttribute('data-w')+'%'; }); },500);
   var sec = medSec<=0 ? 3 : medSec, line=$('#fuseLine'), btn=$('#toLack');
@@ -422,7 +451,7 @@ $('#send').addEventListener('click',function(){
   var btn=this,msg=$('#sendMsg'); msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
   var pk=picks.map(function(p){return p.t+'（'+p.label+'）';}).join('\n');
   fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第二堂 練習二',answers:[{q:'那一刻',a:moment},{q:'害怕的是',a:fear},{q:'選的卡片與降溫',a:pk},{q:'我缺的是',a:$('#lack').value.trim()}]})})
+    body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第二堂 練習二',answers:[{q:'那一刻',a:moment},{q:'害怕的是',a:fear},{q:'選的卡片與降溫',a:pk},{q:'外在的東西代表',a:oTo?CATS[oTo][0]:''},{q:'我缺的是',a:$('#lack').value.trim()}]})})
     .then(function(r){return r.json();})
     .then(function(res){ if(!res||!res.ok) throw new Error(); show('s6'); })
     .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
