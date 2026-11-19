@@ -144,6 +144,24 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 .picked{margin-top:16px;font-family:var(--sans);font-size:13px;color:var(--ink-soft);line-height:1.8}
 .picked .pk{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 12px;margin:0 6px 6px 0}
 .enough{text-align:center;margin-top:16px}
+/* 抽出的那張 */
+.reveal2{min-height:178px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:4px 0 10px}
+.reveal2 .rhint{font-family:var(--sans);font-size:13px;color:var(--ink-soft);opacity:.8;letter-spacing:.5px}
+.flip{width:100%;max-width:300px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 14px;text-align:center;font-size:19px;line-height:1.6;color:var(--teal-deep);font-weight:700;letter-spacing:1px;animation:flipin .55s cubic-bezier(.3,.7,.3,1) both;box-shadow:0 8px 22px rgba(34,48,58,.1)}
+@keyframes flipin{from{opacity:0;transform:rotateY(90deg) translateY(30px)}to{opacity:1;transform:none}}
+.rq2{font-family:var(--sans);font-size:13px;color:var(--ink-soft);margin:12px 0 8px;letter-spacing:.5px}
+.rbtns2{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:340px}
+.rbtns2 button{font-family:var(--sans);font-size:13px;padding:9px 2px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.rbtns2 button:hover{border-color:var(--teal);color:var(--teal)}
+/* 卡片山丘 */
+.mound{position:relative;height:210px;margin-top:6px}
+.mc{position:absolute;width:46px;height:64px;border-radius:7px;background:linear-gradient(145deg,#2F6F73,#22555A);border:2px solid #FBFCFB;box-shadow:0 2px 6px rgba(34,48,58,.2);cursor:pointer;transition:transform .2s,opacity .4s}
+.mc:after{content:"";position:absolute;inset:6px;border:1px solid rgba(217,164,65,.55);border-radius:4px}
+.mc:hover{filter:brightness(1.12)}
+.mc.gone{opacity:0;transform:translateY(-60px) scale(.6)!important;pointer-events:none}
+.mound.wait .mc{cursor:default}
+.left2{font-family:var(--sans);font-size:12px;color:var(--ink-soft);text-align:center;margin-top:22px;letter-spacing:1px}
+@media(max-width:560px){.mc{width:36px;height:50px}.mound{height:180px}}
 /* 評分 */
 .rate{position:fixed;inset:0;background:rgba(237,241,239,.92);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
 .rate.on{display:flex;animation:fade .4s ease}
@@ -208,6 +226,13 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
     <div class="center mt"><button class="b go" id="toGame" disabled>就是這一刻</button></div>
   </section>
 
+  <!-- 2b 害怕的是什麼 -->
+  <section class="stage" id="s2b">
+    <div class="bigq2" style="font-size:24px;font-weight:700;color:var(--teal-deep);letter-spacing:2px;line-height:1.8;text-align:center">在那個羞愧的時刻，<br>你害怕的是什麼？</div>
+    <textarea id="fear" placeholder="寫下來……" style="min-height:90px;margin-top:20px"></textarea>
+    <div class="center mt"><button class="b go" id="fearGo" disabled>送出</button></div>
+  </section>
+
   <!-- 3 降溫 -->
   <section class="stage" id="s3">
     <div class="game2">
@@ -218,11 +243,11 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
         <div class="tnum" id="tnum">100°</div>
       </div>
       <div class="deckwrap">
-        <p class="deckhint" id="momentLine"></p>
-        <p class="deckhint">如果那一刻，有人對你說這句話、或給你這樣東西——<br><b>哪一張，會讓你好過一點？</b></p>
-        <div class="deck" id="deck"></div>
-        <div class="picked" id="picked"></div>
-        <div class="enough"><button class="b ghost" id="enough" style="display:none">差不多了 →</button></div>
+        <p class="deckhint">回想從小到大，當你感受到那種害怕——<br>那一刻，如果有人對你說這句話、或給你這樣東西，<br><b>哪一個會讓你好過一點？</b></p>
+        <div class="reveal2" id="reveal2"><div class="rhint">從下面的卡片堆裡，隨手抽一張。</div></div>
+        <div class="mound" id="mound"></div>
+        <div class="left2" id="left2"></div>
+        <div class="enough"><button class="b ghost" id="enough" style="display:none">就到這裡 →</button></div>
       </div>
     </div>
   </section>
@@ -262,20 +287,6 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
     <footer>練 習 愛 自 己　·　關 於 自 我 認 同 的 24 個 練 習</footer>
   </section>
 
-</div>
-
-<!-- 評分 -->
-<div class="rate" id="rate">
-  <div class="box">
-    <div class="said" id="said"></div>
-    <div class="rq">聽到、得到這個，羞愧降了多少？</div>
-    <div class="rbtns">
-      <button class="rb" data-v="0">一點都沒有</button>
-      <button class="rb" data-v="6">一點點</button>
-      <button class="rb" data-v="14">不少</button>
-      <button class="rb" data-v="24">好多</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -338,36 +349,55 @@ function toMoment(){
 }
 function chkM(){ $('#toGame').disabled=!$('#moment').value.trim(); }
 $('#moment').addEventListener('input',chkM);
-$('#toGame').addEventListener('click',function(){
-  moment=$('#moment').value.trim();
-  $('#momentLine').innerHTML='那一刻：「'+esc(moment)+'」';
-  deck=shuffle(POOL); hand=[]; for(var i=0;i<SHOW;i++) hand.push(deck.shift());
-  drawDeck(); setTemp(100); show('s3');
+var fear='';
+$('#toGame').addEventListener('click',function(){ moment=$('#moment').value.trim(); show('s2b'); setTimeout(function(){$('#fear').focus();},400); });
+$('#fear').addEventListener('input',function(){ $('#fearGo').disabled=!this.value.trim(); });
+$('#fearGo').addEventListener('click',function(){
+  fear=$('#fear').value.trim();
+  deck=shuffle(POOL); buildMound(); setTemp(100); show('s3');
 });
 
-// ---- 降溫 ----
-function drawDeck(){
-  $('#deck').innerHTML=hand.map(function(c,i){ return c?'<div class="c2" data-i="'+i+'">'+esc(c[0])+'</div>':''; }).join('');
+// ---- 降溫：卡片山丘 ----
+function buildMound(){
+  // 由下往上一層層疊：10, 9, 7, 5, 3 張，合計 34
+  var rows=[10,9,7,5,3], h='', k=0, m=$('#mound');
+  var W=m.clientWidth||300, cw=(W<400?36:46), ch=(W<400?50:64), H=m.clientHeight||200;
+  rows.forEach(function(n,r){
+    var span=W*(0.92-r*0.16), x0=(W-span)/2, step=n>1?(span-cw)/(n-1):0;
+    for(var i=0;i<n && k<deck.length;i++,k++){
+      var x=x0+i*step+(Math.random()*8-4), y=H-ch-r*(ch*0.52)+(Math.random()*6-3), rot=(Math.random()*24-12);
+      h+='<div class="mc" data-k="'+k+'" style="left:'+x.toFixed(1)+'px;top:'+y.toFixed(1)+'px;transform:rotate('+rot.toFixed(1)+'deg);z-index:'+(r*20+i)+'"></div>';
+    }
+  });
+  m.innerHTML=h; updLeft();
 }
+function updLeft(){ var n=document.querySelectorAll('#mound .mc:not(.gone)').length; $('#left2').textContent='還有 '+n+' 張'; return n; }
 function setTemp(t){
   temp=Math.max(0,Math.round(t));
   $('#fill').style.height=temp+'%';
   var cool=temp<40; $('#bulb').style.background=cool?'#E2B862':'#C0623F'; $('#tnum').style.color=cool?'#B0862E':'#C0623F';
   $('#tnum').textContent=temp+'°';
 }
-var cur=-1;
-$('#deck').addEventListener('click',function(e){ var c=e.target.closest('.c2'); if(!c)return; cur=+c.getAttribute('data-i'); $('#said').textContent=hand[cur][0]; $('#rate').classList.add('on'); });
-document.querySelectorAll('#rate .rb').forEach(function(b){ b.addEventListener('click',function(){
-  var v=+b.getAttribute('data-v'), c=hand[cur];
-  picks.push({t:c[0],k:c[1],v:v,label:b.textContent});
-  $('#rate').classList.remove('on');
+var cur=null, waiting=false;
+$('#mound').addEventListener('click',function(e){
+  var c=e.target.closest('.mc'); if(!c||waiting||temp<=0) return;
+  waiting=true; $('#mound').classList.add('wait');
+  c.classList.add('gone'); updLeft();
+  cur=deck[+c.getAttribute('data-k')];
+  $('#reveal2').innerHTML='<div class="flip">'+esc(cur[0])+'</div><div class="rq2">這一張，讓你降溫了嗎？降了多少？</div>'
+    +'<div class="rbtns2"><button data-v="0">沒有</button><button data-v="6">一點點</button><button data-v="14">不少</button><button data-v="24">好多</button></div>';
+});
+$('#reveal2').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b||!cur) return;
+  var v=+b.getAttribute('data-v');
+  picks.push({t:cur[0],k:cur[1],v:v,label:b.textContent}); cur=null;
   setTemp(temp-v);
-  hand[cur]=deck.length?deck.shift():null; drawDeck();
-  $('#picked').innerHTML='已經選了：'+picks.map(function(p){return '<span class="pk">'+esc(p.t)+'</span>';}).join('');
-  if(picks.length>=MINPICK || temp<=20) $('#enough').style.display='inline-block';
-  if(temp<=0){ setTimeout(reveal,1400); }
-});});
-$('#rate').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('on'); });
+  var left=updLeft();
+  $('#reveal2').innerHTML='<div class="rhint">'+(temp>0?'再抽一張。':'溫度，降下來了。')+'</div>';
+  waiting=false; $('#mound').classList.remove('wait');
+  if(picks.length>=12 && temp>0) $('#enough').style.display='inline-block';
+  if(temp<=0 || left===0){ waiting=true; setTimeout(reveal,1600); }
+});
 $('#enough').addEventListener('click',reveal);
 
 // ---- 揭曉 ----
@@ -393,7 +423,7 @@ $('#send').addEventListener('click',function(){
   var btn=this,msg=$('#sendMsg'); msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
   var pk=picks.map(function(p){return p.t+'（'+p.label+'）';}).join('\n');
   fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第二堂 練習二',answers:[{q:'那一刻',a:moment},{q:'選的卡片與降溫',a:pk},{q:'我缺的是',a:$('#lack').value.trim()}]})})
+    body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第二堂 練習二',answers:[{q:'那一刻',a:moment},{q:'害怕的是',a:fear},{q:'選的卡片與降溫',a:pk},{q:'我缺的是',a:$('#lack').value.trim()}]})})
     .then(function(r){return r.json();})
     .then(function(res){ if(!res||!res.ok) throw new Error(); show('s6'); })
     .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
@@ -404,7 +434,7 @@ $('#againBtn').addEventListener('click',function(){ location.reload(); });
 $('#dlBtn').addEventListener('click',function(){
   function pad(n){return String(n).padStart(2,'0');}
   var d=new Date(),st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  var L=['# 練習愛自己 · 第二堂 · 降溫','','> 日期：'+st,'','## 那一刻','',moment,'','## 讓我降溫的',''];
+  var L=['# 練習愛自己 · 第二堂 · 降溫','','> 日期：'+st,'','## 那一刻','',moment,'','## 在那個羞愧的時刻，我害怕的是','',fear,'','## 讓我降溫的',''];
   picks.forEach(function(p){ L.push('- '+p.t+'（'+p.label+'）'); });
   L.push('','## 那一刻，我缺的是','',$('#lack').value.trim(),'');
   var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
