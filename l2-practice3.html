@@ -251,8 +251,8 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <!-- 2b 負面形容詞 -->
   <section class="stage" id="s2b">
     <div class="ask">根據你無法接受他的理由，<br>寫出形容他的負面詞，至少 5 個。</div>
-    <div class="hint">一個一個寫。例如：自私、虛偽、愛現……</div>
-    <div class="addbar2"><input class="line" id="adjIn" type="text" maxlength="6" placeholder="他很……"><button class="b go" id="adjAdd">寫上去</button></div>
+    <div class="hint">每寫一個，按 Enter 或「寫上去」，它就會出現在下面。<br>一次寫好幾個也可以，用空格或頓號隔開。寫錯了，點一下那個詞就能拿掉。</div>
+    <div class="addbar2"><input class="line" id="adjIn" type="text" maxlength="60" placeholder="例如：自私"><button class="b go" id="adjAdd">寫上去</button></div>
     <div class="recall" style="margin-top:14px;min-height:56px"><div id="adjList"></div></div>
     <div class="cnt3" id="adjCnt"></div>
     <div class="center mt"><button class="b go" id="toTheater" style="display:none">寫好了 →</button></div>
@@ -411,11 +411,17 @@ $('#toAdj').addEventListener('click',function(){ data.who=$('#who').value.trim()
 
 // ---- 負面形容詞（至少 5 個）----
 function updAdj(){
-  $('#adjList').innerHTML=data.adjs.map(function(a){return '<span class="chip" style="cursor:default">'+esc(a)+'</span>';}).join('') || '<span class="hint">（還沒寫）</span>';
-  $('#adjCnt').innerHTML='已經寫了 <b>'+data.adjs.length+'</b> 個'+(data.adjs.length<5?'（至少 5 個）':'');
+  $('#adjList').innerHTML=data.adjs.map(function(a,i){return '<span class="chip" data-i="'+i+'" title="點一下拿掉" style="cursor:pointer">'+esc(a)+' <span style="opacity:.45;font-size:.85em">×</span></span>';}).join('') || '<span class="hint">（還沒寫）</span>';
+  $('#adjCnt').innerHTML='已經寫了 <b>'+data.adjs.length+'</b> 個'+(data.adjs.length<5?'（至少 5 個）':'')+(data.adjs.length>=12?'（最多 12 個）':'');
   $('#toTheater').style.display = data.adjs.length>=5 ? 'inline-block' : 'none';
 }
-function addAdj(){ var v=$('#adjIn').value.trim(); $('#adjIn').value=''; $('#adjIn').focus(); if(!v||data.adjs.length>=12) return; data.adjs.push(v); updAdj(); }
+function addAdj(){
+  var parts=$('#adjIn').value.split(/[\s,，、;；\/。.]+/);
+  $('#adjIn').value=''; $('#adjIn').focus();
+  parts.forEach(function(v){ v=v.replace(/^他很/,'').trim(); if(v && data.adjs.length<12 && data.adjs.indexOf(v)<0) data.adjs.push(v); });
+  updAdj();
+}
+$('#adjList').addEventListener('click',function(e){ var c=e.target.closest('.chip'); if(!c) return; data.adjs.splice(+c.getAttribute('data-i'),1); updAdj(); });
 $('#adjAdd').addEventListener('click',addAdj); bindEnter($('#adjIn'),addAdj);
 
 // ---- 劇場 ----
