@@ -162,12 +162,13 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 .reveal.on{opacity:1}
 
 /* ===== 第二堂 練習三 ===== */
+.theater{width:100%}
 .stagefloor.big{min-height:0;height:auto}
-.heWrap{position:relative;width:min(320px,86%);height:210px;margin:0 auto}
-.heWrap svg.he{position:absolute;left:50%;top:18px;width:84px;height:140px;transform:translateX(-50%)}
+.heWrap{position:relative;width:min(420px,92%);height:280px;margin:0 auto}
+.heWrap svg.he{position:absolute;left:50%;top:22px;width:116px;height:192px;transform:translateX(-50%)}
 .heWrap .plank{position:absolute;left:10%;right:10%;bottom:38px;width:auto;margin:0}
 .heWrap .melbl{position:absolute;left:0;right:0;bottom:12px;text-align:center}
-.htag{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));font-family:var(--sans);font-size:13px;padding:3px 9px;border-radius:7px;white-space:nowrap;background:#C98A6B;color:#2a1a12;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:opacity .9s,transform .9s;animation:stick .45s cubic-bezier(.34,1.56,.64,1) both}
+.htag{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));font-family:var(--sans);font-size:15px;padding:4px 11px;border-radius:7px;white-space:nowrap;background:#C98A6B;color:#2a1a12;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:opacity .9s,transform .9s;animation:stick .45s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes stick{from{opacity:0;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1.6)}to{opacity:1;transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1)}}
 .htag.cut{opacity:0!important;transform:translate(-50%,40%) rotate(calc(var(--r,0deg) + 25deg)) scale(.7)!important}
 .cloud{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:94%;margin:14px auto 2px;min-height:10px}
@@ -410,7 +411,7 @@ function addAdj(){ var v=$('#adjIn').value.trim(); $('#adjIn').value=''; $('#adj
 $('#adjAdd').addEventListener('click',addAdj); bindEnter($('#adjIn'),addAdj);
 
 // ---- 劇場 ----
-var SPOT=[[50,6],[20,24],[80,24],[24,46],[76,46],[50,40],[18,68],[82,68],[36,62],[64,62],[50,74],[32,86]];
+var SPOT=[[50,5],[18,20],[82,20],[50,38],[14,42],[86,42],[30,58],[70,58],[12,66],[88,66],[50,72],[24,84],[76,84]];
 $('#toTheater').addEventListener('click',function(){
   try{ data.moment=localStorage.getItem('aixue_l2_moment')||''; }catch(e){}
   $('#heLbl').textContent=data.who;
@@ -427,12 +428,9 @@ $('#toTheater').addEventListener('click',function(){
   // 頭上冒出：練習一裡，你替台下的人寫的話（最多 5 句，隨機）
   var people=[]; try{ people=JSON.parse(localStorage.getItem('aixue_l2_people')||'[]'); }catch(e){}
   var lines=shuffle(people.map(function(p){return p.thought;}).filter(Boolean)).slice(0,5);
-  if(lines.length){
-    lines.forEach(function(t,i){ setTimeout(function(){ addBubble(t,false); }, 2600+i*1300); });
-    setTimeout(function(){ $('#toB').style.display='inline-block'; }, 2600+lines.length*1300+800);
-  } else {
-    $('#aOwn').style.display='flex'; setTimeout(function(){ $('#aIn').focus(); },500);
-  }
+  if(!lines.length) lines=shuffle(['好丟臉喔','他是不是很混','真不可靠','還好不是我','怎麼會這樣啦']).slice(0,4);
+  lines.forEach(function(t,i){ setTimeout(function(){ addBubble(t,false); }, 2600+i*1300); });
+  setTimeout(function(){ $('#toB').style.display='inline-block'; }, 2600+lines.length*1300+800);
 });
 function addBubble(t,pos){
   var b=document.createElement('div'); b.className='cb'+(pos?' pos':''); b.textContent=t;
