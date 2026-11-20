@@ -176,6 +176,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 .cb.on{opacity:1;transform:none}
 .cb.pos{background:#2F6F73;color:#F7F4EC}
 .cb.out{opacity:0;transform:scale(.8)}
+.cb.now{box-shadow:0 0 0 3px #E2B862}
 .youseat{display:flex;flex-direction:column;align-items:center;margin-top:4px}
 .youseat .who{width:46px;height:46px}
 .youseat .chair{width:56px;height:12px;border-radius:6px 6px 3px 3px;background:#3A4B55;margin-top:-2px}
@@ -284,7 +285,8 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
 
     <!-- b 換一種想法 -->
     <div class="panel" id="pB" style="display:none">
-      <div class="ask">可以選的話，你會換哪種想法？</div>
+      <div class="ask" id="bAsk">可以選的話，你會換哪種想法？</div>
+      <div class="cnt3" id="bCnt" style="text-align:left;margin:0 0 4px"></div>
       <div class="opts2" id="bOpts"></div>
       <div class="own"><input class="line" id="bIn" type="text" maxlength="30" placeholder="或者，你自己寫一句……"><button class="b go" id="bAdd">用這句</button></div>
     </div>
@@ -448,30 +450,47 @@ $('#toB').addEventListener('click',function(){
   var mine=picks.filter(function(p){return p.k==='b'&&p.v>0;}).sort(function(a,b){return b.v-a.v;}).map(function(p){return p.t;});
   pool=mine.concat(shuffle(LOVE).filter(function(t){return mine.indexOf(t)<0;})).map(toHim);
   pool=pool.filter(function(t,i,a){return a.indexOf(t)===i;});
-  $('#bOpts').innerHTML=pool.slice(0,5).map(function(t,i){return '<button class="opt2" data-i="'+i+'">'+esc(t)+'</button>';}).join('');
-  $('#pA').style.display='none'; $('#pB').style.display='block';
+  totalNeg=document.querySelectorAll('#cloud .cb:not(.pos)').length;
+  $('#pA').style.display='none'; $('#pB').style.display='block'; renderB();
 });
 function cutTags(n){
   var live=Array.prototype.filter.call(document.querySelectorAll('#heWrap .htag'),function(t){return !t.classList.contains('cut');});
   shuffle(live).slice(0,n).forEach(function(t,i){ setTimeout(function(){ t.classList.add('cut'); }, i*450); });
   return live.length-Math.min(n,live.length);
 }
-function firstSwap(t){
+var totalNeg=0, bOpts=[];
+function curNeg(){ return document.querySelector('#cloud .cb:not(.pos)'); }
+function renderB(){
+  var n=curNeg(); if(!n) return;
+  document.querySelectorAll('#cloud .cb').forEach(function(c){c.classList.remove('now');}); n.classList.add('now');
+  var done=totalNeg-document.querySelectorAll('#cloud .cb:not(.pos)').length;
+  $('#bAsk').innerHTML='「'+esc(n.textContent)+'」<br>可以選的話，你會換哪種想法？';
+  $('#bCnt').textContent='第 '+(done+1)+' 句 / 共 '+totalNeg+' 句';
+  bOpts=pool.filter(function(x){return data.pos.indexOf(x)<0;}).slice(0,5);
+  $('#bOpts').innerHTML=bOpts.map(function(t,i){return '<button class="opt2" data-i="'+i+'">'+esc(t)+'</button>';}).join('');
+  $('#bIn').value='';
+}
+var swapping=false;
+function swap(t){
+  if(swapping) return; swapping=true;
   data.pos.push(t);
-  var first=document.querySelector('#cloud .cb:not(.pos)');
-  if(first){ first.textContent=t; first.classList.add('pos'); } else addBubble(t,true);
-  var left=cutTags(Math.max(2,Math.ceil(data.adjs.length/3)));
-  $('#pB').style.display='none';
+  var n=curNeg();
+  if(n){ n.classList.remove('now'); n.textContent=t; n.classList.add('pos'); }
+  var left=cutTags(1);
   setTimeout(function(){
+    swapping=false;
+    if(curNeg()){ renderB(); return; }
+    $('#pB').style.display='none';
     if(left>0){
+      chosen=[];
       var rest=pool.filter(function(x){return data.pos.indexOf(x)<0;}).slice(0,8);
-      $('#cOpts').innerHTML=rest.map(function(x,i){return '<button class="opt2" data-t="'+esc(x)+'">'+esc(x)+'</button>';}).join('');
+      $('#cOpts').innerHTML=rest.map(function(x){return '<button class="opt2" data-t="'+esc(x)+'">'+esc(x)+'</button>';}).join('');
       updC(); $('#pC').style.display='block';
     } else toD();
-  }, 1800);
+  }, 1300);
 }
-$('#bOpts').addEventListener('click',function(e){ var b=e.target.closest('.opt2'); if(!b) return; firstSwap(pool[+b.getAttribute('data-i')]); });
-function ownB(){ var v=$('#bIn').value.trim(); if(!v) return; firstSwap(v); }
+$('#bOpts').addEventListener('click',function(e){ var b=e.target.closest('.opt2'); if(!b) return; swap(bOpts[+b.getAttribute('data-i')]); });
+function ownB(){ var v=$('#bIn').value.trim(); if(!v) return; swap(v); }
 $('#bAdd').addEventListener('click',ownB); bindEnter($('#bIn'),ownB);
 
 // ---- 剩下的標籤：剛好三句 ----
@@ -498,13 +517,7 @@ $('#cGo').addEventListener('click',function(){
   chosen.forEach(function(t){ data.pos.push(t); });
   cutTags(99);
   // 台下：剩下的舊想法換成新的句子
-  var negs=Array.prototype.slice.call(document.querySelectorAll('#cloud .cb:not(.pos)'));
-  chosen.forEach(function(t,i){
-    setTimeout(function(){
-      if(negs[i]){ negs[i].textContent=t; negs[i].classList.add('pos'); } else addBubble(t,true);
-    }, 600+i*700);
-  });
-  setTimeout(function(){ negs.slice(chosen.length).forEach(function(n){ n.classList.add('out'); setTimeout(function(){ n.remove(); },800); }); }, 600+chosen.length*700);
+  chosen.forEach(function(t,i){ setTimeout(function(){ addBubble(t,true); }, 600+i*700); });
   setTimeout(toD, 600+chosen.length*700+1600);
 });
 
