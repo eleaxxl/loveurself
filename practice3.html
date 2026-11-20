@@ -80,8 +80,8 @@ button.ghost{color:var(--teal);background:transparent}
 
 /* 打字機頁 */
 .tw{font-size:44px;font-weight:700;letter-spacing:8px;color:var(--teal-deep);min-height:1.6em;text-indent:8px}
-.tw .caret{display:inline-block;width:3px;height:.9em;background:var(--teal-deep);margin-left:4px;vertical-align:-.08em;animation:blink .9s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
+.tw .ch{opacity:0;transition:opacity 1.6s ease}
+.tw .ch.on{opacity:1}
 .turn{font-size:22px;color:var(--ink);letter-spacing:2px;line-height:2;margin-top:28px;opacity:0;transform:translateY(10px);transition:opacity 2s,transform 2s}
 .turn.on{opacity:1;transform:none}
 .turn em{font-style:normal;font-weight:700;color:#C0623F;padding:0 2px}
@@ -352,22 +352,21 @@ $('#send').addEventListener('click',function(){
 var FUSE=30;
 function reveal(){
   show('s6b');
-  var tw=$('#tw'), txt='我不夠好', i=0;
-  tw.innerHTML='<span class="caret"></span>';
+  var tw=$('#tw'), txt='我不夠好';
+  // 一個字一個字淡入，沒有游標
+  tw.innerHTML=txt.split('').map(function(c){return '<span class="ch">'+esc(c)+'</span>';}).join('');
   $('#turn').classList.remove('on'); $('#gotIt').classList.add('hide');
   var line=$('#fuseLine'); line.style.transition='none'; line.style.width='100%'; $('.fuse').classList.remove('on');
-  setTimeout(function type(){
-    i++; tw.innerHTML=esc(txt.slice(0,i))+'<span class="caret"></span>';
-    if(i<txt.length) setTimeout(type,420);
-    else setTimeout(function(){
-      $('#turn').classList.add('on');
-      setTimeout(function(){
-        $('.fuse').classList.add('on');
-        requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.transition='width '+FUSE+'s linear'; line.style.width='0%'; }); });
-        setTimeout(function(){ bowl(true); $('#gotIt').classList.remove('hide'); }, FUSE*1000);
-      },2200);
-    },1200);
-  },900);
+  var chs=tw.querySelectorAll('.ch');
+  chs.forEach(function(c,i){ setTimeout(function(){ c.classList.add('on'); }, 900+i*700); });
+  setTimeout(function(){
+    $('#turn').classList.add('on');
+    setTimeout(function(){
+      $('.fuse').classList.add('on');
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.transition='width '+FUSE+'s linear'; line.style.width='0%'; }); });
+      setTimeout(function(){ bowl(true); $('#gotIt').classList.remove('hide'); }, FUSE*1000);
+    },2200);
+  }, 900+chs.length*700+1400);
 }
 $('#gotIt').addEventListener('click',function(){ show('s7'); });
 

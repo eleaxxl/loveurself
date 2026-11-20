@@ -400,6 +400,7 @@ function feelAgain(){
 var oTo=null;
 function sums(){ var x={s:0,b:0,o:0}; picks.forEach(function(p){ x[p.k]+=p.v; }); return x; }
 function finish(){
+  try{ localStorage.setItem('aixue_l2_picks',JSON.stringify(picks)); }catch(e){}
   var x=sums();
   if(x.o>x.s && x.o>x.b){
     $('#oList').innerHTML=picks.filter(function(p){return p.k==='o'&&p.v>0;}).map(function(p){return esc(p.t);}).join('、');
