@@ -313,10 +313,16 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s4">
     <header class="top"><div class="kicker">回 頭 看</div><h1 style="font-size:26px">剛剛走過的</h1></header>
     <div class="recap" id="recap"></div>
-    <div class="fld">
-      <div class="ask">你願意嘗試學習，無條件接納他人嗎？</div>
-      <textarea id="willing" placeholder="寫下你的回答……" style="min-height:70px"></textarea>
+    <div class="center" style="margin-top:18px">
+      <div class="bigq3">你願意嘗試學習<br>「無條件接納」嗎？</div>
+      <div class="fuse"><div class="fuseline" id="fuseLine2"></div></div>
+      <div style="min-height:64px;margin-top:22px"><button class="b go" id="toFeel" style="visibility:hidden;opacity:0;transition:opacity 1.2s">繼續</button></div>
     </div>
+  </section>
+
+  <!-- 4b 感想 -->
+  <section class="stage" id="s4b">
+    <header class="top"><div class="kicker">寫 下 來</div><h1 style="font-size:26px">感想</h1></header>
     <div class="fld">
       <div class="ask">做完這個練習，你的感想是——</div>
       <textarea id="feel" placeholder="寫下來……" style="min-height:80px"></textarea>
@@ -325,7 +331,7 @@ footer{text-align:center;padding-top:46px;color:var(--ink-soft);opacity:.6;font-
       <div class="hint" style="margin-bottom:6px">你的暱稱（送出給引導人需要）</div>
       <input class="line" id="nick" type="text" placeholder="你的名字或暱稱" autocomplete="off">
     </div>
-    <div class="hint center" id="needMsg" style="margin-top:20px">兩題都寫了、填上暱稱，送出按鈕就會出現。</div>
+    <div class="hint center" id="needMsg" style="margin-top:20px">寫下感想、填上暱稱，送出按鈕就會出現。</div>
     <div class="center mt"><button class="b go" id="send" style="display:none">寫好了，送出</button></div>
     <div class="hint center" id="sendMsg" style="margin-top:12px;min-height:1.4em"></div>
   </section>
@@ -534,22 +540,27 @@ function toD(){
 // ---- 整理 + 感想 ----
 $('#toSum').addEventListener('click',function(){
   $('#recap').innerHTML=
-    '<div class="rk">很 難 接 納 的 人</div><div class="rv">'+esc(data.who)+'</div>'+
-    '<div class="rk">我 不 接 納 他 ， 因 為 他</div><div class="rv">'+esc(data.why)+'</div>'+
-    '<div class="rk">我 貼 在 他 身 上 的 標 籤</div><div class="rv">'+data.adjs.map(esc).join('、')+'</div>'+
+    '<div class="rk">我 不 接 納 '+esc(data.who)+' ， 因 為 他</div><div class="rv">'+esc(data.why)+'</div>'+
     '<div class="rk">我 願 意 選 擇 的 話</div><div class="rv">'+data.pos.map(function(t){return '「'+esc(t)+'」';}).join('<br>')+'</div>';
   try{ var cc=JSON.parse(localStorage.getItem('aixue_collect_v1')||'{}'); if(cc.nick&&!$('#nick').value) $('#nick').value=cc.nick; }catch(e){}
-  show('s4'); chkSend();
+  show('s4');
+  setTimeout(function(){
+    var sec=secs(2), line=$('#fuseLine2');
+    line.style.transition='none'; line.style.width='100%';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.transition='width '+sec+'s linear'; line.style.width='0%'; }); });
+    setTimeout(function(){ bowl(); var b=$('#toFeel'); b.style.visibility='visible'; b.style.opacity='1'; }, sec*1000);
+  }, 400);
 });
-function chkSend(){ var ok=$('#willing').value.trim() && $('#feel').value.trim() && $('#nick').value.trim(); $('#send').style.display=ok?'inline-block':'none'; $('#needMsg').style.display=ok?'none':'block'; }
-['#willing','#feel','#nick'].forEach(function(s){ $(s).addEventListener('input',chkSend); });
+$('#toFeel').addEventListener('click',function(){ show('s4b'); chkSend(); });
+function chkSend(){ var ok=$('#feel').value.trim() && $('#nick').value.trim(); $('#send').style.display=ok?'inline-block':'none'; $('#needMsg').style.display=ok?'none':'block'; }
+['#feel','#nick'].forEach(function(s){ $(s).addEventListener('input',chkSend); });
 $('#send').addEventListener('click',function(){
   var btn=this,msg=$('#sendMsg'); msg.style.color=''; msg.textContent='送出中……'; btn.disabled=true;
-  data.willing=$('#willing').value.trim(); data.feel=$('#feel').value.trim();
+  data.feel=$('#feel').value.trim();
   fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
     body:JSON.stringify({name:$('#nick').value.trim(),lesson:'第二堂 練習三',answers:[
       {q:'很難接納的人',a:data.who},{q:'我不接納他，因為他',a:data.why},{q:'負面形容詞',a:data.adjs.join('、')},
-      {q:'我願意選擇的話',a:data.pos.join('\n')},{q:'願意嘗試學習無條件接納他人嗎',a:data.willing},{q:'感想',a:data.feel}]})})
+      {q:'我願意選擇的話',a:data.pos.join('\n')},{q:'感想',a:data.feel}]})})
     .then(function(r){return r.json();})
     .then(function(res){ if(!res||!res.ok) throw new Error(); show('s5'); })
     .catch(function(){ msg.style.color='#b4524a'; msg.textContent='送出沒成功，請再按一次。'; btn.disabled=false; });
@@ -561,10 +572,8 @@ $('#dlBtn').addEventListener('click',function(){
   function pad(n){return String(n).padStart(2,'0');}
   var d=new Date(),st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   var L=['# 練習愛自己 · 第二堂 · 換個位子','','> 日期：'+st,'',
-    '## 很難接納的人','',data.who,'','## 我不接納他，因為他','',data.why,'',
-    '## 我貼在他身上的標籤','',data.adjs.join('、'),'',
+    '## 我不接納'+data.who+'，因為他','',data.why,'',
     '## 我願意選擇的話',''].concat(data.pos.map(function(t){return '- 「'+t+'」';})).concat(['',
-    '## 你願意嘗試學習，無條件接納他人嗎？','',data.willing,'',
     '## 感想','',data.feel,'','---','','我是被接納的。','我也能接納所有人。','']);
   var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
   var u=URL.createObjectURL(blob),a=document.createElement('a');
