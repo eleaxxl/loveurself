@@ -122,6 +122,11 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
 .say.mine{border-style:dashed}
 .say{position:relative}
 .say .k{position:absolute;top:-8px;left:-8px;width:24px;height:24px;border-radius:50%;background:var(--teal);color:var(--on-teal);font-family:var(--sans);font-size:12px;display:flex;align-items:center;justify-content:center}
+.slots{display:flex;flex-direction:column;gap:10px;margin:14px 0 4px}
+.slot{display:flex;align-items:center;gap:12px}
+.slot .sn{flex:0 0 28px;height:28px;border-radius:50%;background:var(--teal);color:var(--on-teal);font-family:var(--sans);font-size:13px;display:flex;align-items:center;justify-content:center}
+.slot input{flex:1}
+.slot .fixed{flex:1;font-size:17px;font-weight:700;color:var(--teal-deep);letter-spacing:1px;padding:13px 16px;border:1px dashed var(--line);border-radius:12px}
 .cnt3{font-family:var(--sans);font-size:14px;color:var(--ink-soft);text-align:center;margin-top:16px}
 .ownrow{display:flex;gap:10px;margin-top:12px}
 .ownrow input{flex:1}
@@ -197,21 +202,26 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
   <section class="stage" id="s4">
     <div class="steps"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
     <div class="worry"><span class="lb">它 說</span><span id="worryShow"></span><br><span class="hint" id="tempShow"></span></div>
-    <div class="ask center">選三句正面的話，<br>等一下，一句一句對它說。</div>
+    <div class="ask center">你想對它說的三句正面的話——</div>
+    <p class="hint center">直接寫在格子裡；或點下面的句子，放進空的格子。</p>
+    <div class="slots">
+      <div class="slot"><span class="sn">一</span><input class="line" id="l0" type="text" maxlength="40" placeholder="第一句……"></div>
+      <div class="slot"><span class="sn">二</span><input class="line" id="l1" type="text" maxlength="40" placeholder="第二句……"></div>
+      <div class="slot"><span class="sn">三</span><input class="line" id="l2" type="text" maxlength="40" placeholder="第三句……"></div>
+      <div class="slot"><span class="sn">四</span><div class="fixed">不論你是什麼，我都接納你。</div></div>
+    </div>
+    <div class="or">沒有想法的話，可以從這裡挑</div>
     <div class="says" id="says"></div>
-    <div class="ownrow"><input class="line" id="ownIn" type="text" maxlength="40" placeholder="自己寫一句……"><button class="b ghost" id="ownAdd">加上</button></div>
-    <div class="cnt3" id="cnt3"></div>
-    <p class="hint center" style="margin-top:8px">第四句，是固定的：「不論你是什麼，我都接納你。」</p>
-    <div class="center mt"><button class="b go" id="go4" disabled style="opacity:.4">就是這三句</button></div>
+    <div class="center mt"><button class="b go" id="go4" disabled style="opacity:.4">就是這四句</button></div>
   </section>
 
-  <!-- 4v 一句一句說 -->
+  <!-- 4v 四句一起說 -->
   <section class="stage" id="s4v">
     <div class="steps"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
     <div class="vow">
-      <div class="no" id="vNo"></div>
-      <div class="line" id="vLine"></div>
-      <div class="how">記住這一句。<br>閉上眼，找到它，對它說。<br>磬聲響了，再張開眼。</div>
+      <div class="no">對 它 說</div>
+      <div class="line"><span class="whole" id="vAll"></span></div>
+      <div class="how">記住這四句。<br>閉上眼，找到它，一次說完。<br>磬聲響了，再張開眼。</div>
       <div class="mt"><button class="b go" id="vGo">閉上眼，對它說</button></div>
     </div>
   </section>
@@ -246,7 +256,7 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
 'use strict';
 var $=function(s){return document.querySelector(s);};
 // 閉眼秒數（可調）
-var SEC_CALL=15, SEC_SAY=12, SEC_HUG=20;
+var SEC_CALL=15, SEC_SAY=35, SEC_HUG=20;
 
 var AC=null;
 var BOWL_RAW=null, BOWL_BUF=null;
@@ -312,50 +322,38 @@ $('#go3').addEventListener('click',function(){
   buildSays(); show('s4');
 });
 
-// 4 對它說：選三句 + 第四句固定
+// 4 對它說：三句自己的 + 第四句固定，一次說完
 var ANCHOR='不論你是什麼，我都接納你。';
 var STOCK=['不管怎樣，我都站在你這邊。','就算是這樣，我還是喜歡你。','你不是一個人。','出錯也沒關係，我在。','每個人都有這種時候。','你真的對我很重要。','我愛你，不用懷疑。','沒事，我會保護你。'];
-var chosen=[];
+var SL=[$('#l0'),$('#l1'),$('#l2')];
+function clean(v){ return v.trim().replace(/^[「"]+|[」"]+$/g,''); }
 function buildSays(){
   var fromP2=[];
   try{ (JSON.parse(localStorage.getItem('aixue_l2_picks')||'[]')).forEach(function(p){
     if(p && p.v>0 && p.k!=='o' && !/^有人|^LINE/.test(p.t) && fromP2.indexOf(p.t)<0) fromP2.push(p.t); }); }catch(e){}
   var list=fromP2.concat(STOCK.filter(function(t){return fromP2.indexOf(t)<0;})).slice(0,8);
   $('#says').innerHTML=list.map(function(t){ return '<div class="say" data-t="'+esc(t)+'">「'+esc(t)+'」</div>'; }).join('');
-  chosen=[]; updPick();
+  updPick();
 }
+function vals(){ return SL.map(function(i){return clean(i.value);}); }
 function updPick(){
-  document.querySelectorAll('#says .say').forEach(function(el){
-    var i=chosen.indexOf(el.getAttribute('data-t'));
-    el.classList.toggle('sel',i>=0);
-    var k=el.querySelector('.k'); if(k) k.remove();
-    if(i>=0){ k=document.createElement('span'); k.className='k'; k.textContent=i+1; el.appendChild(k); }
-  });
-  $('#cnt3').innerHTML='已選 <b>'+chosen.length+'</b> / 3 句';
-  var ok=chosen.length===3; $('#go4').disabled=!ok; $('#go4').style.opacity=ok?'1':'.4';
+  var v=vals();
+  document.querySelectorAll('#says .say').forEach(function(el){ el.classList.toggle('sel', v.indexOf(el.getAttribute('data-t'))>=0); });
+  var ok=v.every(function(x){return x;}); $('#go4').disabled=!ok; $('#go4').style.opacity=ok?'1':'.4';
 }
+SL.forEach(function(i){ i.addEventListener('input',updPick); });
 $('#says').addEventListener('click',function(e){
-  var el=e.target.closest('.say'); if(!el) return; var t=el.getAttribute('data-t'), i=chosen.indexOf(t);
-  if(i>=0) chosen.splice(i,1); else if(chosen.length<3) chosen.push(t);
+  var el=e.target.closest('.say'); if(!el) return; var t=el.getAttribute('data-t'), v=vals(), i=v.indexOf(t);
+  if(i>=0){ SL[i].value=''; } else { for(var k=0;k<3;k++){ if(!v[k]){ SL[k].value=t; break; } } }
   updPick();
 });
-function addOwn(){
-  var v=$('#ownIn').value.trim().replace(/^[「"]|[」"]$/g,''); if(!v) return; $('#ownIn').value='';
-  if(!document.querySelector('#says .say[data-t="'+v.replace(/"/g,'\\"')+'"]')){
-    var d=document.createElement('div'); d.className='say mine'; d.setAttribute('data-t',v); d.textContent='「'+v+'」';
-    $('#says').insertBefore(d,$('#says').firstChild);
-  }
-  if(chosen.indexOf(v)<0 && chosen.length<3) chosen.push(v);
-  updPick();
-}
-$('#ownAdd').addEventListener('click',addOwn);
-$('#ownIn').addEventListener('keydown',function(e){ if(e.key==='Enter' && !e.isComposing && e.keyCode!==229){ e.preventDefault(); addOwn(); } });
-var LINES=[], vi=0, NUM=['第 一 句','第 二 句','第 三 句','第 四 句'];
-function showV(){ $('#vNo').textContent=NUM[vi]; $('#vLine').textContent='「'+LINES[vi]+'」'; show('s4v'); }
-$('#go4').addEventListener('click',function(){ if(chosen.length!==3) return; LINES=chosen.concat([ANCHOR]); rec.said=LINES.slice(); vi=0; showV(); });
-$('#vGo').addEventListener('click',function(){
-  closeEyes('',SEC_SAY,function(){ vi++; if(vi<LINES.length) showV(); else show('s5'); });
+$('#go4').addEventListener('click',function(){
+  var v=vals(); if(!v.every(function(x){return x;})) return;
+  rec.said=v.concat([ANCHOR]);
+  $('#vAll').innerHTML=rec.said.map(function(t){return '「'+esc(t)+'」';}).join('<br>');
+  show('s4v');
 });
+$('#vGo').addEventListener('click',function(){ closeEyes('',SEC_SAY,function(){ show('s5'); }); });
 
 // 5 擁抱
 $('#go5').addEventListener('click',function(){
