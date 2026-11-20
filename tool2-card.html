@@ -22,7 +22,8 @@ html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--hand);-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
 /* ===== 卡片：以 720×880 設計，外框固定為 72×88mm ===== */
-.cardbox{width:72mm;height:88mm;position:relative;overflow:hidden}
+.cardbox{width:67.8mm;height:88mm;position:relative;overflow:hidden}
+img.face{display:block;width:100%;height:100%}
 .card{position:absolute;left:0;top:0;width:720px;height:880px;transform-origin:0 0;transform:scale(.377953);overflow:hidden}
 .card > svg.bgart{position:absolute;inset:0;width:720px;height:880px}
 .card .layer{position:absolute;inset:0}
@@ -53,7 +54,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--hand);-webkit-font-
 .screen h1{font-size:34px;font-weight:700;letter-spacing:5px;margin:0 0 10px;color:var(--teal-deep)}
 .screen .sub{font-family:var(--sans);font-size:15px;color:var(--ink-soft);letter-spacing:1.5px;line-height:1.9}
 .pair{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin:38px 0 6px}
-.pv{width:min(340px,86vw);aspect-ratio:72/88;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px rgba(34,48,58,.18),0 2px 6px rgba(34,48,58,.08)}
+.pv{width:min(340px,86vw);aspect-ratio:716/929;position:relative;border-radius:22px;overflow:hidden;box-shadow:0 18px 40px rgba(34,48,58,.18),0 2px 6px rgba(34,48,58,.08)}
 .pv .card{transform-origin:0 0}
 .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
 .btns a,.btns button{font-family:var(--sans);font-size:15px;letter-spacing:.18em;border-radius:999px;padding:13px 30px;cursor:pointer;text-indent:.18em;border:1px solid var(--teal);text-decoration:none;display:inline-block}
@@ -71,12 +72,12 @@ footer{margin-top:46px;color:var(--ink-soft);opacity:.6;font-family:var(--sans);
   html,body{background:#fff}
   .screen{display:none}
   .sheet{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9mm;width:210mm;height:297mm}
-  .fold{position:relative;display:flex;width:144mm;height:88mm}
+  .fold{position:relative;display:flex;width:135.6mm;height:88mm}
   .fold i{position:absolute;background:#9aa7a5}
   .fold .h{width:3.5mm;height:.15mm}.fold .v{width:.15mm;height:3.5mm}
   .fold .h.l{left:-5mm}.fold .h.r{right:-5mm}.fold .v.t{top:-4.5mm}.fold .v.b{bottom:-4.5mm}
   .fold .h.t0{top:0}.fold .h.b0{bottom:0}.fold .v.l0{left:0}.fold .v.r0{right:0}
-  .fold .v.m{left:72mm;width:0;background:none;border-left:.2mm dashed #9aa7a5}
+  .fold .v.m{left:67.8mm;width:0;background:none;border-left:.2mm dashed #9aa7a5}
 }
 </style>
 </head>
@@ -109,98 +110,11 @@ footer{margin-top:46px;color:var(--ink-soft);opacity:.6;font-family:var(--sans);
 
 <script>
 (function(){
-  // ---------- 裝飾：葉枝、山丘、金框、紙紋 ----------
-  function leaf(x,y,ang,len,w,fill,vein){
-    return '<g transform="translate('+x+' '+y+') rotate('+ang+')">'
-      +'<path d="M0 0 C '+len*.25+' '+(-w)+' '+len*.7+' '+(-w*.9)+' '+len+' 0 C '+len*.7+' '+(w*.9)+' '+len*.25+' '+w+' 0 0 Z" fill="'+fill+'"/>'
-      +'<path d="M2 0 L '+(len*.92)+' 0" stroke="'+vein+'" stroke-width="1.6" opacity=".55"/></g>';
-  }
-  function sprig(ox,oy,rot,scale,c1,c2,stem){
-    var g='<g transform="translate('+ox+' '+oy+') rotate('+rot+') scale('+scale+')">';
-    g+='<path d="M0 0 C 70 -18 150 -60 230 -150" fill="none" stroke="'+stem+'" stroke-width="3.2" stroke-linecap="round"/>';
-    var pts=[[34,-8,-58,56,15],[60,-17,40,62,16],[92,-30,-70,66,17],[122,-46,20,68,17],[150,-66,-82,64,16],[176,-88,0,60,15],[202,-116,-90,54,14],[228,-148,-40,46,13]];
-    pts.forEach(function(p,i){ g+=leaf(p[0],p[1],p[2],p[3],p[4],i%2?c1:c2,stem); });
-    return g+'</g>';
-  }
-  function frame(stroke){
-    var x0=26,y0=26,x1=694,y1=854,r=30;
-    return '<path d="M'+(x0+r)+' '+y0+' H'+(x1-r)+' A'+r+' '+r+' 0 0 0 '+x1+' '+(y0+r)+' V'+(y1-r)+' A'+r+' '+r+' 0 0 0 '+(x1-r)+' '+y1+' H'+(x0+r)+' A'+r+' '+r+' 0 0 0 '+x0+' '+(y1-r)+' V'+(y0+r)+' A'+r+' '+r+' 0 0 0 '+(x0+r)+' '+y0+' Z" fill="none" stroke="'+stroke+'" stroke-width="2.2"/>';
-  }
-  function paper(id,op){
-    return '<filter id="'+id+'" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .42  0 0 0 0 .35  0 0 0 '+op+' 0"/></filter>'
-      +'<rect width="720" height="880" filter="url(#'+id+')"/>';
-  }
-  function steam(x,y,sc,op){
-    return '<path transform="translate('+x+' '+y+') scale('+sc+')" d="M0 0 C -26 -30 26 -60 0 -92 C -24 -122 22 -150 2 -184" fill="none" stroke="#E7B48C" stroke-width="7" stroke-linecap="round" opacity="'+op+'"/>';
-  }
-  function thermo(k){
-    var cx=330, top=246, bot=580, w=64;
-    var g='<defs><linearGradient id="liq'+k+'" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#F2A53C"/><stop offset=".5" stop-color="#E9793E"/><stop offset="1" stop-color="#D2534A"/></linearGradient>'
-      +'<radialGradient id="blb'+k+'" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#FBC35B"/><stop offset=".7" stop-color="#F29A36"/><stop offset="1" stop-color="#E5812C"/></radialGradient></defs>';
-    // glass outer
-    g+='<rect x="'+(cx-w/2-10)+'" y="'+(top-10)+'" width="'+(w+20)+'" height="'+(bot-top+60)+'" rx="'+(w/2+10)+'" fill="#F4F1E6" stroke="#B9C3B2" stroke-width="3"/>';
-    g+='<circle cx="'+cx+'" cy="'+(bot+62)+'" r="78" fill="#F4F1E6" stroke="#B9C3B2" stroke-width="3"/>';
-    g+='<rect x="'+(cx-w/2-8)+'" y="'+(bot-20)+'" width="'+(w+16)+'" height="60" fill="#F4F1E6"/>';
-    // inner channel
-    g+='<rect x="'+(cx-w/2+8)+'" y="'+top+'" width="'+(w-16)+'" height="'+(bot-top+40)+'" rx="'+(w/2-8)+'" fill="#FBF8F0"/>';
-    // liquid
-    g+='<rect x="'+(cx-w/2+12)+'" y="'+(top+56)+'" width="'+(w-24)+'" height="'+(bot-top)+'" rx="'+(w/2-12)+'" fill="url(#liq'+k+')"/>';
-    g+='<circle cx="'+cx+'" cy="'+(bot+62)+'" r="60" fill="url(#blb'+k+')"/>';
-    g+='<path d="M'+(cx-36)+' '+(bot+40)+' A44 44 0 0 1 '+(cx-6)+' '+(bot+18)+'" fill="none" stroke="#FFF3D6" stroke-width="6" stroke-linecap="round" opacity=".6"/>';
-    g+='<rect x="'+(cx-w/2+16)+'" y="'+(top+70)+'" width="6" height="'+(bot-top-90)+'" rx="3" fill="#fff" opacity=".28"/>';
-    // ticks
-    [296,384,472,560].forEach(function(y){ g+='<path d="M'+(cx+w/2+12)+' '+y+' H'+(cx+w/2+52)+'" stroke="#3E5F5C" stroke-width="2.4"/>'; });
-    return g;
-  }
-  function FRONT(k){
-    var svg='<svg class="bgart" viewBox="0 0 720 880" aria-hidden="true"><defs><radialGradient id="fv'+k+'" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#FBF8F0"/><stop offset="1" stop-color="#EFE7D5"/></radialGradient></defs>'
-      +'<rect width="720" height="880" fill="url(#fv'+k+')"/>'+paper('fp'+k,.10)
-      +'<path d="M0 826 C 120 796 230 806 330 826 C 420 846 520 842 720 812 V880 H0 Z" fill="#C7D3C4" opacity=".5"/>'
-      +'<path d="M0 852 C 150 834 280 846 420 860 C 540 870 640 860 720 852 V880 H0 Z" fill="#DCE3D6" opacity=".9"/>'
-      +'<path d="M150 866 C 300 846 430 842 560 828 C 620 822 670 814 700 806" fill="none" stroke="var(--gold)" stroke-width="2.4" opacity=".85"/>'
-      +frame('var(--gold)')
-      +'<path d="M176 220 C 280 208 420 204 548 190 C 440 212 300 222 190 226 Z" fill="var(--gold)" opacity=".85"/>'
-      +steam(232,470,1,.4)+steam(262,410,.8,.3)
-      +sprig(18,214,-50,.72,'#9FB39C','#B9C8B4','#7F977D')
-      +sprig(120,740,-58,.46,'#A6B8A2','#C3D0BE','#7F977D')
-      
-      +sprig(676,866,-72,.62,'#A6B8A2','#C3D0BE','#7F977D')
-      +thermo(k)
-      +'</svg>';
-    return '<div class="card front">'+svg+'<div class="layer">'
-      +'<div class="ttl">羞愧溫度計</div>'
-      +'<div class="lbl" style="top:296px">滾燙</div><div class="lbl" style="top:384px">發燙</div><div class="lbl" style="top:472px">微溫</div><div class="lbl" style="top:560px">平靜</div>'
-      +'<div class="foot">臉一熱、好想躲起來的時候</div>'
-      +'</div></div>';
-  }
-  function BACK(k){
-    var svg='<svg class="bgart" viewBox="0 0 720 880" aria-hidden="true"><defs><radialGradient id="bv'+k+'" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#256B62"/><stop offset="1" stop-color="#174A44"/></radialGradient></defs>'
-      +'<rect width="720" height="880" fill="url(#bv'+k+')"/>'+paper('bp'+k,.12)
-      +'<path d="M0 800 C 140 770 260 786 360 812 C 460 838 580 830 720 790 V880 H0 Z" fill="#2E7A6F" opacity=".45"/>'
-      +'<path d="M0 836 C 160 816 300 836 430 852 C 560 866 650 852 720 842 V880 H0 Z" fill="#14433D" opacity=".6"/>'
-      +'<path d="M30 846 C 170 816 300 846 420 858 C 520 866 600 850 680 818" fill="none" stroke="var(--gold)" stroke-width="2.4" opacity=".9"/>'
-      +frame('var(--gold)')
-      +sprig(34,190,-48,.62,'#A9BFA4','#CBD7C5','#93AA90')
-      +sprig(672,864,-74,.56,'#D8CFAE','#E8E0C2','#B9AE86')
-      +'</svg>';
-    function st(n,t,nob){ return '<div class="st'+(nob?' nob':'')+'"><div class="disc">'+n+'</div><div class="tx">'+t+'</div></div>'; }
-    return '<div class="card back">'+svg+'<div class="layer">'
-      +'<div class="kick">練習愛自己 · 第二堂</div><div class="rule"></div>'
-      +'<span class="ring" style="left:222px"></span><div class="big">羞愧</div><span class="ring" style="left:482px"></span>'
-      +'<div class="steps">'
-      +st('一','召喚你的習氣')+st('二','讓它說：別人會怎麼想')+st('三','量一量，它有多燙')+st('四','對它說四句話',true)
-      +'<div class="wl"></div><div class="wl"></div><div class="wl"></div>'
-      +'<div class="anchor">不論你是什麼，我都接納你。</div>'
-      +st('五','擁抱',true)
-      +'</div></div></div>';
-  }
-  var pvF=document.getElementById('pvF'), pvB=document.getElementById('pvB');
-  pvF.innerHTML=FRONT('s'); pvB.innerHTML=BACK('s');
-  function fit(){ var s=pvF.clientWidth/720; document.querySelectorAll('.pv .card').forEach(function(c){ c.style.transform='scale('+s+')'; }); }
-  window.addEventListener('resize',fit); fit();
+  function FRONT(){ return '<img class="face" src="tool2-card-front.jpg" alt="羞愧溫度計 正面">'; }
+  function BACK(){ return '<img class="face" src="tool2-card-back.jpg" alt="羞愧溫度計 背面">'; }
+  document.getElementById('pvF').innerHTML=FRONT(); document.getElementById('pvB').innerHTML=BACK();
   var marks='<i class="h l t0"></i><i class="h r t0"></i><i class="h l b0"></i><i class="h r b0"></i><i class="v t l0"></i><i class="v t r0"></i><i class="v b l0"></i><i class="v b r0"></i><i class="v t m"></i><i class="v b m"></i>';
-  var h='';
-  for(var i=0;i<3;i++){ h+='<div class="fold"><div class="cardbox">'+FRONT('p'+i)+'</div><div class="cardbox">'+BACK('p'+i)+'</div>'+marks+'</div>'; }
+  var h=''; for(var i=0;i<3;i++){ h+='<div class="fold"><div class="cardbox">'+FRONT()+'</div><div class="cardbox">'+BACK()+'</div>'+marks+'</div>'; }
   document.getElementById('sheet').innerHTML=h;
   document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
 })();
