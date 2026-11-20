@@ -389,5 +389,28 @@ $('#dlBtn').addEventListener('click',function(){
 });
 })();
 </script>
+<script>
+/* 靜心時間：不得低於 30 秒；作弊碼 -99 = 0 秒 */
+(function(){
+  var inp=document.getElementById('medCustom'); if(!inp) return;
+  var def=document.querySelector('#medOpts .opt.sel')||document.querySelector('#medOpts .opt');
+  var toast=document.createElement('div');
+  toast.style.cssText='position:fixed;left:50%;top:22px;transform:translateX(-50%);z-index:99;background:#C0623F;color:#fff;font-family:"Noto Sans TC",sans-serif;font-size:15px;letter-spacing:1px;padding:11px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.15);opacity:0;transition:opacity .3s;pointer-events:none';
+  toast.textContent='不得低於 30 秒喔！'; document.body.appendChild(toast);
+  var tt=null, lastRej=0;
+  function bad(){ var v=inp.value.trim(); if(!v) return false; if(v==='-99') return false; var n=parseInt(v,10); return isNaN(n)||n<30||String(n)!==v.replace(/^\+/,''); }
+  function reject(){
+    lastRej=Date.now(); inp.value=''; if(def) def.click();
+    toast.style.opacity='1'; clearTimeout(tt); tt=setTimeout(function(){ toast.style.opacity='0'; },2200);
+    inp.focus();
+  }
+  inp.addEventListener('change',function(){ if(bad()) reject(); });
+  document.addEventListener('click',function(e){
+    if(e.target===inp || !e.target.closest('button')) return;
+    if(bad()){ e.stopImmediatePropagation(); e.preventDefault(); reject(); }
+    else if(Date.now()-lastRej<600){ e.stopImmediatePropagation(); e.preventDefault(); }
+  },true);
+})();
+</script>
 </body>
 </html>
