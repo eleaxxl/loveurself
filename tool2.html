@@ -169,6 +169,14 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
       <div class="no">召 喚</div>
       <div class="line" style="font-size:24px">閉上眼，<br>召喚你的習氣。</div>
       <div class="how">那個讓你臉一熱、想躲起來的它。<br>讓它，站到你面前。<br>磬聲響了，再張開眼。</div>
+      <div class="opts" id="medOpts" style="margin-top:26px">
+        <div class="opt" data-sec="30">30 秒</div>
+        <div class="opt sel" data-sec="45">45 秒</div>
+        <div class="opt" data-sec="60">60 秒</div>
+        <div class="opt" data-sec="90">90 秒</div>
+      </div>
+      <div class="custom"><input id="medCustom" type="text" inputmode="numeric" placeholder="自訂秒數"></div>
+      <p class="hint" style="margin-top:10px">選一個靜心時間。等一下對它說四句話，會是這個時間的兩倍。</p>
       <div class="mt"><button class="b go" id="go1">閉上眼</button></div>
     </div>
   </section>
@@ -256,7 +264,8 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
 'use strict';
 var $=function(s){return document.querySelector(s);};
 // 閉眼秒數（可調）
-var SEC_CALL=15, SEC_SAY=35, SEC_HUG=20;
+var medSec=45, SEC_HUG=20;
+function sayDur(){ return medSec>0 ? medSec*2 : 35; }
 
 var AC=null;
 var BOWL_RAW=null, BOWL_BUF=null;
@@ -286,8 +295,18 @@ var rec={worry:'',temp:null,said:[]};
 
 // 0 → 1 召喚
 $('#go0').addEventListener('click',function(){ audioCtx(); prepBowl(); show('s1'); });
+$('#medOpts').addEventListener('click',function(e){
+  var o=e.target.closest('.opt'); if(!o) return;
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  o.classList.add('sel'); medSec=parseInt(o.getAttribute('data-sec'),10); $('#medCustom').value='';
+});
+$('#medCustom').addEventListener('input',function(){
+  document.querySelectorAll('#medOpts .opt').forEach(function(x){x.classList.remove('sel');});
+  var v=parseInt(this.value,10); if(!isNaN(v)) medSec=v;
+});
 $('#go1').addEventListener('click',function(){
-  closeEyes('召喚你的習氣……',SEC_CALL,function(){ show('s2'); setTimeout(function(){$('#worry').focus();},300); });
+  if(medSec<=0){ show('s2'); return; }
+  closeEyes('召喚你的習氣……',medSec,function(){ show('s2'); setTimeout(function(){$('#worry').focus();},300); });
 });
 
 // 2 讓它說
@@ -353,7 +372,7 @@ $('#go4').addEventListener('click',function(){
   $('#vAll').innerHTML=rec.said.map(function(t){return '「'+esc(t)+'」';}).join('<br>');
   show('s4v');
 });
-$('#vGo').addEventListener('click',function(){ closeEyes('',SEC_SAY,function(){ show('s5'); }); });
+$('#vGo').addEventListener('click',function(){ closeEyes('',sayDur(),function(){ show('s5'); }); });
 
 // 5 擁抱
 $('#go5').addEventListener('click',function(){
