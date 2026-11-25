@@ -240,7 +240,7 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
     <div class="steps"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span></div>
     <div class="vow">
       <div class="no">擁 抱</div>
-      <div class="line">走上前去，<br>與你的習氣擁抱。</div>
+      <div class="line">走上前去，<br>與你的瓦薩那擁抱。</div>
       <div class="sub">這一步，沒有說話。</div>
       <div class="how">磬聲響了，再張開眼。</div>
       <div class="mt"><button class="b go" id="go5">閉上眼，擁抱</button></div>
@@ -380,10 +380,10 @@ $('#vGo').addEventListener('click',function(){ closeEyes('',sayDur(),function(){
 $('#go5').addEventListener('click',function(){
   closeEyes('',SEC_HUG,function(){
     $('#sumry').innerHTML=
-      '<div class="rk">習 氣 說</div><div class="rv">「'+esc(rec.worry)+'」</div>'+
+      '<div class="rk">瓦 薩 那 說</div><div class="rv">「'+esc(rec.worry)+'」</div>'+
       '<div class="rk">羞 愧 的 溫 度</div><div class="rv">'+rec.temp+'°（'+word(rec.temp)+'）</div>'+
       '<div class="rk">我 對 它 說</div><div class="rv">'+rec.said.map(function(t){return '「'+esc(t)+'」';}).join('<br>')+'</div>'+
-      '<div class="rk">然 後</div><div class="rv">走上前去，與習氣擁抱。</div>';
+      '<div class="rk">然 後</div><div class="rv">走上前去，與瓦薩那擁抱。</div>';
     show('s6');
   });
 });
@@ -393,9 +393,9 @@ $('#againBtn').addEventListener('click',function(){ location.reload(); });
 $('#dlBtn').addEventListener('click',function(){
   function pad(n){return String(n).padStart(2,'0');}
   var d=new Date(),st=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
-  var L=['# 練習愛自己 · 工具 · 羞愧溫度計','','> '+st,'','## 習氣說','',rec.worry,'',
+  var L=['# 練習愛自己 · 工具 · 羞愧溫度計','','> '+st,'','## 瓦薩那說','',rec.worry,'',
     '## 羞愧的溫度','',rec.temp+'°（'+word(rec.temp)+'）','','## 我對它說',''].concat(rec.said.map(function(t){return '- 「'+t+'」';})).concat(['',
-    '## 然後','','走上前去，與習氣擁抱。','']);
+    '## 然後','','走上前去，與瓦薩那擁抱。','']);
   var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
   var u=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=u; a.download='練習愛自己_羞愧溫度計_'+st.slice(0,10).replace(/-/g,'')+'.md';

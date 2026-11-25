@@ -152,7 +152,7 @@ footer{text-align:center;padding-top:40px;color:var(--ink-soft);opacity:.6;font-
 
   <!-- 4 · 讓它講三次 -->
   <section class="stage" id="s4">
-    <p class="lead">這個反覆回來的聲音，有一個名字，叫<b>習氣</b>。<br>它不是你的缺陷，<br>只是過去很多次相同的感受，留下來的痕跡。</p>
+    <p class="lead">這個反覆回來的聲音，有一個名字，叫<b>瓦薩那</b>（習氣）。<br>它不是你的缺陷，<br>只是過去很多次相同的感受，留下來的痕跡。</p>
     <p class="lead">等一下，閉上眼，請它把這句話，對你講三次：</p>
     <div class="voice" id="voice"></div>
     <p class="lead">你不閃、不反駁，就看著它，聽。<br>如果想逃、想快點結束，認出它：「啊，我想逃了。」<br>然後回來，繼續看著它。</p>
@@ -220,8 +220,8 @@ var VOWS=[
   {line:'謝謝你告訴我這些。', sub:'', sec:12},
   {line:'我不是不＿＿。', sub:'填上你自己的：我不是不好、我不是不聰明、我不是不努力……', sec:14},
   {line:'我們，我和你，<br>只是有種「不夠」的感覺。', sub:'', sec:14},
-  {line:'走上前去，<br>與你的習氣擁抱。', sub:'這一句，沒有說話。', sec:20},
-  {line:'<span class="whole">「謝謝你告訴我這些。」<br>「我不是不＿＿。」<br>「我們，我和你，<br>只是有種『不夠』的感覺。」<br>然後，走上前去，與你的習氣擁抱。</span>', sub:'四句話，整合起來，再說一次。', sec:35}
+  {line:'走上前去，<br>與你的瓦薩那擁抱。', sub:'這一句，沒有說話。', sec:20},
+  {line:'<span class="whole">「謝謝你告訴我這些。」<br>「我不是不＿＿。」<br>「我們，我和你，<br>只是有種『不夠』的感覺。」<br>然後，走上前去，與你的瓦薩那擁抱。</span>', sub:'四句話，整合起來，再說一次。', sec:35}
 ];
 var THREE_GAP=9;   // 講三次：每一聲磬之間的秒數
 
@@ -379,7 +379,7 @@ $('#dlBtn').addEventListener('click',function(){
     '## 那個聲音的樣子','',$('#aShape').value.trim(),'',
     '## 它什麼時候醒來','',$('#aWhen').value.trim(),'',
     '## 它的第一句話','','「'+$('#aWord').value.trim()+'」','',
-    '## 我對它說的四句話','','- 謝謝你告訴我這些。','- 我不是不＿＿。','- 我們，我和你，只是有種「不夠」的感覺。','- （沒有說話）走上前去，與你的習氣擁抱。','',
+    '## 我對它說的四句話','','- 謝謝你告訴我這些。','- 我不是不＿＿。','- 我們，我和你，只是有種「不夠」的感覺。','- （沒有說話）走上前去，與你的瓦薩那擁抱。','',
     '## 做完的感受','',$('#aFeel').value.trim(),''];
   var blob=new Blob([L.join('\n')],{type:'text/markdown;charset=utf-8'});
   var u=URL.createObjectURL(blob),a=document.createElement('a');
